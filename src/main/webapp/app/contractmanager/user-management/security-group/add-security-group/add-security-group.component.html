@@ -1,0 +1,553 @@
+<div class="dashboard-container d-flex flex-column">
+  <div class="title mb-4">
+    <button mat-icon-button [routerLink]="['/contractmanager/user-management/security-group/view-security-groups']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span *ngIf="displayMode == 'CREATE'; else editSg" jhiTranslate="contractmanager.userManagement.createSecurityGroups"
+      >Create Security Group</span
+    >
+    <ng-template #editSg>{{ securityGroupName?.value }}</ng-template>
+  </div>
+  <div class="form-container" [formGroup]="securityGroupForm">
+    <jhi-cm-stepper #cdkStepper [linear]="displayMode == 'CREATE'">
+      <cdk-step [stepControl]="securityGroupForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.details">Details</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.shared.details">Details</span>
+          <div>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
+          </div>
+        </div>
+
+        <div
+          class="d-flex flex-column justify-content-between edit-container"
+          *ngIf="displayMode != 'VIEW'; else viewDetails"
+          style="flex: 1"
+        >
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.shared.name">Name</mat-label>
+                <input formControlName="name" matInput required />
+                <mat-error
+                  *ngIf="securityGroupName?.errors?.required"
+                  jhiTranslate="contractmanager.userManagement.securityGroupNameRequired"
+                  >Security Group Name is required</mat-error
+                >
+                <mat-error
+                  *ngIf="securityGroupName?.errors?.minlength"
+                  jhiTranslate="contractmanager.userManagement.securityGroupNameMinLength"
+                  >Security Group Name must be at least 3 characters</mat-error
+                >
+                <mat-error
+                  *ngIf="securityGroupName?.errors?.maxlength"
+                  jhiTranslate="contractmanager.userManagement.securityGroupNameMaxLength"
+                  >Security Group Name must be less than 30 characters</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.shared.description">Description</mat-label>
+                <input formControlName="description" matInput />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between mt-4" *ngIf="displayMode == 'CREATE'; else buttons">
+          <div style="min-width: 100px"></div>
+          <div>
+            <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+            <button mat-raised-button [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+          </div>
+          <button mat-button matStepperNext [disabled]="securityGroupForm.invalid" jhiTranslate="contractmanager.shared.next">Next</button>
+        </div>
+      </cdk-step>
+
+      <cdk-step [stepControl]="securityGroupForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.userManagement.kpi">KPI</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.userManagement.kpi">KPI</span>
+          <div>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between edit-container" *ngIf="displayMode != 'VIEW'; else kpiTemplate">
+          <div class="sg-table">
+            <mat-table [dataSource]="kpiDataSource" formArrayName="kpi" matSort option>
+              <ng-container matColumnDef="kpi">
+                <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.kpi_1"> KPI </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="view">
+                <mat-header-cell *matHeaderCellDef class="justify-content-center" jhiTranslate="contractmanager.shared.view">
+                  View
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element; let rowIndex = index" class="justify-content-center">
+                  <ng-container [formGroupName]="rowIndex">
+                    <mat-radio-group name="kpi-{{ rowIndex }}" formControlName="privilege">
+                      <mat-radio-button value="1"></mat-radio-button>
+                    </mat-radio-group>
+                  </ng-container>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="none">
+                <mat-header-cell *matHeaderCellDef class="justify-content-center" jhiTranslate="contractmanager.shared.none">
+                  None
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element; let rowIndex = index" class="justify-content-center">
+                  <ng-container [formGroupName]="rowIndex">
+                    <mat-radio-group name="kpi-{{ rowIndex }}" formControlName="privilege">
+                      <mat-radio-button value="0"></mat-radio-button>
+                    </mat-radio-group>
+                  </ng-container>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="kpiColumns; sticky: true"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: kpiColumns"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between mt-4">
+            <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+            </div>
+            <button mat-button matStepperNext jhiTranslate="contractmanager.shared.next">Next</button>
+          </div>
+        </div>
+      </cdk-step>
+
+      <cdk-step [stepControl]="securityGroupForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.report">Report</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span>Report</span>
+          <div>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between" style="flex: 1" *ngIf="displayMode != 'VIEW'; else reportTemplate">
+          <div class="sg-table">
+            <mat-table [dataSource]="reportDataSource" formArrayName="report" matSort>
+              <ng-container matColumnDef="reports">
+                <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.reports"> Reports </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="view">
+                <mat-header-cell *matHeaderCellDef class="justify-content-center" jhiTranslate="contractmanager.shared.view">
+                  View
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element; let rowIndex = index" class="justify-content-center">
+                  <ng-container [formGroupName]="rowIndex">
+                    <mat-radio-group name="report-{{ rowIndex }}" formControlName="privilege">
+                      <mat-radio-button value="1"></mat-radio-button>
+                    </mat-radio-group>
+                  </ng-container>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="none">
+                <mat-header-cell *matHeaderCellDef class="justify-content-center" jhiTranslate="contractmanager.shared.none">
+                  None
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element; let rowIndex = index" class="justify-content-center">
+                  <ng-container [formGroupName]="rowIndex">
+                    <mat-radio-group name="report-{{ rowIndex }}" formControlName="privilege">
+                      <mat-radio-button value="0"></mat-radio-button>
+                    </mat-radio-group>
+                  </ng-container>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="reportColumns; sticky: true"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: reportColumns"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between mt-4">
+            <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+            </div>
+            <button mat-button matStepperNext jhiTranslate="contractmanager.shared.next">Next</button>
+          </div>
+        </div>
+      </cdk-step>
+
+      <cdk-step [stepControl]="securityGroupForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.userManagement.users">Users</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span>Users</span>
+          <div>
+            <button mat-raised-button color="primary" (click)="openAddUserDialog()" jhiTranslate="contractmanager.shared.addMember">
+              Add Member
+            </button>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
+          </div>
+        </div>
+        <div class="d-flex flex-column justify-content-start h-100 text-disabled" *ngIf="displayMode != 'VIEW'; else usersTemplate">
+          <div class="d-flex p-2 user-list-header align-items-center mb-2">
+            <div class="flex-even" jhiTranslate="contractmanager.userManagement.userName">User Name</div>
+            <div class="flex-even" jhiTranslate="contractmanager.userManagement.emailAddress">Email Address</div>
+            <div class="flex-even text-right" jhiTranslate="contractmanager.shared.action">Action</div>
+          </div>
+          <div class="flex-even" *ngIf="selectedUsers; else noUsers">
+            <div *ngFor="let user of selectedUsers">
+              <div class="user-item d-flex p-2 mb-3 align-items-center" *ngIf="user.isSelected">
+                <span class="flex-even"> {{ (user.firstName + ' ' + user.lastName | titlecase) || 'N/A' }}</span>
+                <div class="flex-even">
+                  <span> {{ user.email }}</span>
+                </div>
+                <div class="flex-even d-flex justify-content-end overflow-hidden">
+                  <div class="cursor-pointer" (click)="user.isSelected = false">
+                    <mat-icon>delete_outline</mat-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noUsers>
+            <div
+              class="h-100 d-flex justify-content-center align-items-center text-disabled"
+              jhiTranslate="contractmanager.userManagement.noUsersAdded"
+            >
+              No users added yet
+            </div>
+          </ng-template>
+        </div>
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between mt-4">
+            <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+            </div>
+            <button mat-button matStepperNext jhiTranslate="contractmanager.shared.next">Next</button>
+          </div>
+        </div>
+      </cdk-step>
+
+      <cdk-step [stepControl]="securityGroupForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.userManagement.privileges">Privileges</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.userManagement.privileges">Privileges</span>
+          <div>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between" style="flex: 1" *ngIf="displayMode != 'VIEW'; else privilegeTemplate">
+          <div class="sg-table">
+            <mat-table [dataSource]="privilegesDataSource" formArrayName="privilege" matSort>
+              <ng-container matColumnDef="privilege">
+                <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.reports"> Reports </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="view">
+                <mat-header-cell *matHeaderCellDef class="justify-content-center" jhiTranslate="contractmanager.shared.view">
+                  View
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element; let rowIndex = index" class="justify-content-center">
+                  <ng-container [formGroupName]="rowIndex">
+                    <mat-radio-group name="prev-{{ rowIndex }}" formControlName="privilege">
+                      <mat-radio-button value="1"></mat-radio-button>
+                    </mat-radio-group>
+                  </ng-container>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="manage">
+                <mat-header-cell *matHeaderCellDef class="justify-content-center" jhiTranslate="contractmanager.shared.manage">
+                  Manage
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element; let rowIndex = index" class="justify-content-center">
+                  <ng-container [formGroupName]="rowIndex">
+                    <mat-radio-group name="prev-{{ rowIndex }}" formControlName="privilege">
+                      <mat-radio-button value="2"></mat-radio-button>
+                    </mat-radio-group>
+                  </ng-container>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="none">
+                <mat-header-cell *matHeaderCellDef class="justify-content-center" jhiTranslate="contractmanager.shared.none">
+                  None
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element; let rowIndex = index" class="justify-content-center">
+                  <ng-container [formGroupName]="rowIndex">
+                    <mat-radio-group name="prev-{{ rowIndex }}" formControlName="privilege">
+                      <mat-radio-button value="0"></mat-radio-button>
+                    </mat-radio-group>
+                  </ng-container>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="privilegeColumns; sticky: true"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: privilegeColumns"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between mt-4">
+            <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+            </div>
+            <button mat-button matStepperNext jhiTranslate="contractmanager.shared.next">Next</button>
+          </div>
+        </div>
+      </cdk-step>
+
+      <cdk-step *ngIf="displayMode == 'CREATE'">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.verify">Verify</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.shared.verify">Verify</span>
+        </div>
+
+        <div>
+          <ng-container *ngTemplateOutlet="viewDetails"></ng-container>
+          <ng-container [ngTemplateOutlet]="kpiTemplate" [ngTemplateOutletContext]="{ disabled: true }"></ng-container>
+          <ng-container [ngTemplateOutlet]="reportTemplate" [ngTemplateOutletContext]="{ disabled: true }"></ng-container>
+          <ng-container [ngTemplateOutlet]="usersTemplate" [ngTemplateOutletContext]="{ disabled: true }"></ng-container>
+          <ng-container [ngTemplateOutlet]="privilegeTemplate" [ngTemplateOutletContext]="{ disabled: true }"></ng-container>
+        </div>
+
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between my-4">
+            <button matStepperPrevious mat-button jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="securityGroupForm.invalid"
+                (click)="save()"
+                jhiTranslate="contractmanager.shared.create"
+              >
+                Create
+              </button>
+            </div>
+            <div style="min-width: 100px"></div>
+          </div>
+        </div>
+      </cdk-step>
+    </jhi-cm-stepper>
+
+    <ng-template #viewDetails>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.shared.details">Details</span>
+          </div>
+          <div>
+            <div class="flex-row-wrap section">
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.shared.name">Name</div>
+                <div class="form-value">{{ securityGroupForm.value.name | titlecase }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.shared.details">Description</div>
+                <div class="form-value">{{ securityGroupForm.value.description || '-' | titlecase }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #kpiTemplate>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.userManagement.kpi">KPI</span>
+          </div>
+          <div>
+            <div class="sg-view-table" [ngClass]="kpiToggleClass && displayMode == 'CREATE' ? 'table-collapse' : ''">
+              <div class="row mat-header-row privilege-header">
+                <div class="col"></div>
+                <div class="col d-flex justify-content-around align-items-center">
+                  <div jhiTranslate="contractmanager.shared.view_1">View</div>
+                  <div jhiTranslate="contractmanager.shared.none">None</div>
+                </div>
+              </div>
+              <div *ngFor="let elem of kpi.value" class="row privilege-row align-items-center">
+                <div class="col">
+                  {{ elem.name }}
+                </div>
+                <mat-radio-group aria-label="Select an option" disabled="true" class="col d-flex justify-content-around mt-2">
+                  <mat-radio-button [checked]="elem.privilege == 1" value="1"></mat-radio-button>
+                  <mat-radio-button [checked]="elem.privilege == 0" value="0"></mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center mt-4" *ngIf="displayMode == 'CREATE'">
+              <button type="button" class="btn btn-outline-primary" (click)="kpiToggleClass = !kpiToggleClass">
+                {{ kpiToggleClass ? 'View All' : 'Hide' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #reportTemplate>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.shared.reports">Reports</span>
+          </div>
+          <div>
+            <div class="sg-view-table" [ngClass]="reportToggleClass && displayMode == 'CREATE' ? 'table-collapse' : ''">
+              <div class="row mat-header-row privilege-header">
+                <div class="col"></div>
+                <div class="col d-flex justify-content-around align-items-center">
+                  <div jhiTranslate="contractmanager.shared.view_1">View</div>
+                  <div jhiTranslate="contractmanager.shared.none">None</div>
+                </div>
+              </div>
+              <div *ngFor="let elem of report.value" class="row privilege-row align-items-center">
+                <div class="col">
+                  {{ elem.name }}
+                </div>
+                <mat-radio-group aria-label="Select an option" disabled="true" class="col d-flex justify-content-around mt-2">
+                  <mat-radio-button [checked]="elem.privilege == 1" value="1"></mat-radio-button>
+                  <mat-radio-button [checked]="elem.privilege == 0" value="0"></mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center mt-4" *ngIf="displayMode == 'CREATE'">
+              <button type="button" class="btn btn-outline-primary" (click)="reportToggleClass = !reportToggleClass">
+                {{ reportToggleClass ? 'View All' : 'Hide' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #privilegeTemplate>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.userManagement.privileges">Privileges</span>
+          </div>
+          <div>
+            <div class="sg-view-table" [ngClass]="privilegeToggleClass && displayMode == 'CREATE' ? 'table-collapse' : ''">
+              <div class="row mat-header-row privilege-header">
+                <div class="col"></div>
+                <div class="col d-flex justify-content-around align-items-center">
+                  <div jhiTranslate="contractmanager.shared.view">View</div>
+                  <div jhiTranslate="contractmanager.shared.manage_1">Manage</div>
+                  <div jhiTranslate="contractmanager.shared.none">None</div>
+                </div>
+              </div>
+              <div *ngFor="let elem of privilege.value" class="row privilege-row align-items-center">
+                <div class="col">
+                  {{ elem.name }}
+                </div>
+                <mat-radio-group aria-label="Select an option" disabled="true" class="col d-flex justify-content-around mt-2">
+                  <mat-radio-button [checked]="elem.privilege == 1" value="1"></mat-radio-button>
+                  <mat-radio-button [checked]="elem.privilege == 2" value="2"></mat-radio-button>
+                  <mat-radio-button [checked]="elem.privilege == 0" value="0"></mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center mt-4" *ngIf="displayMode == 'CREATE'">
+              <button type="button" class="btn btn-outline-primary" (click)="privilegeToggleClass = !privilegeToggleClass">
+                {{ privilegeToggleClass ? 'View All' : 'Hide' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #usersTemplate>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.userManagement.users">Users</span>
+          </div>
+          <div class="flex-row-wrap section">
+            <div class="form-pair p-3" *ngFor="let user of selectedUsers">
+              <div class="form-value">{{ user.firstName + ' ' + user.lastName | titlecase }}</div>
+              <div class="form-value user-role" style="text-overflow: ellipsis">{{ user.email }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #update>
+      <div class="stepper-control">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="securityGroupForm.invalid"
+          (click)="save()"
+          jhiTranslate="contractmanager.shared.save"
+        >
+          Save
+        </button>
+      </div>
+    </ng-template>
+    <ng-template #buttons>
+      <div class="d-flex justify-content-center mt-4">
+        <div *ngIf="displayMode == 'UPDATE'">
+          <div>
+            <button mat-button color="primary" (click)="cancel('update')">Cancel</button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="securityGroupForm.invalid"
+              (click)="save()"
+              jhiTranslate="contractmanager.shared.save"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+        <button mat-button *ngIf="displayMode == 'VIEW'" color="primary" (click)="delete()">Delete</button>
+      </div>
+    </ng-template>
+    <ng-template #edit>
+      <div *ngIf="displayMode == 'VIEW'">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="switchToEditMode()"
+          jhiTranslate="contractmanager.shared.edit"
+          *ngIf="entityRole == 'PRIMARY_OWNER'"
+        >
+          Edit
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

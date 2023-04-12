@@ -1,0 +1,19 @@
+.flex-container {
+  display: flex;
+}
+.main-navigation {
+  width: 15.6%;
+  background-color: #033f88;
+}
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+.content-full-height {
+  height: calc(100vh - 10.6vh);
+}
+
+mat-drawer {
+  width: 30%;
+}

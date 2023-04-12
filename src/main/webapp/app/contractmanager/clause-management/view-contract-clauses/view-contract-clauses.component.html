@@ -1,0 +1,60 @@
+<div *ngIf="!pageLoading; else pageLoadingSpinner" class="dashboard-container d-flex flex-column">
+  <div class="title">
+    <button mat-icon-button [routerLink]="['..']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span jhiTranslate="contractmanager.clauseManagement.contractClauses">Contract Clauses</span>
+  </div>
+  <div class="view-types-container flex-grow-1">
+    <mat-table [dataSource]="contractClausesDataSource" matSort>
+      <ng-container matColumnDef="clauseName">
+        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.clauseManagement.clauseName_1"> Clause Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.clauseName }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="contractTypeName">
+        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.clauseManagement.contractType"> Contract Type </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.contractType.name }} </mat-cell>
+      </ng-container>
+
+      <!--      <ng-container matColumnDef="language">-->
+      <!--        <mat-header-cell *matHeaderCellDef> Language </mat-header-cell>-->
+      <!--        <mat-cell *matCellDef="let element"> {{element.language}} </mat-cell>-->
+      <!--      </ng-container>-->
+
+      <ng-container matColumnDef="createdBy">
+        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdBy"> Created By </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.createdBy | titlecase }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdOn">
+        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdOn"> Created On </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.createdDate | date: 'MMM d, y, h:mm a' }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.status_1"> Status </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.status | titlecase }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef class="flex-grow-0"></mat-header-cell>
+        <mat-cell *matCellDef="let element" class="flex-grow-0">
+          <img src="/content/images/detail-view-arrow.svg" />
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="contractClausesColumns"></mat-header-row>
+      <mat-row class="cursor-pointer" *matRowDef="let row; columns: contractClausesColumns" (click)="navigateTo(row)"></mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+
+<ng-template #pageLoadingSpinner>
+  <div class="load-spinner-wrapper">
+    <div class="load-spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </div>
+</ng-template>

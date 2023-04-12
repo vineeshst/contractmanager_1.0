@@ -1,0 +1,39 @@
+<section>
+  <div class="p-3">
+    <h4 mat-dialog-title>{{ data.isApprovalDialog ? 'Approve' : 'Reject' }} Agreement</h4>
+    <mat-dialog-content>
+      <mat-form-field class="w-100" appearance="fill">
+        <mat-label jhiTranslate="contractmanager.shared.messageForApproval" *ngIf="data.isApprovalDialog"></mat-label>
+        <mat-label jhiTranslate="contractmanager.shared.messageForRejection" *ngIf="!data.isApprovalDialog"></mat-label>
+        <textarea class="comment-box" matInput [(ngModel)]="message"></textarea>
+        <mat-error jhiTranslate="contractmanager.shared.descriptionMaxLength">Description must be less than 1000 characters</mat-error>
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="justify-content-center">
+      <div>
+        <button class="mr-2" mat-raised-button jhiTranslate="contractmanager.shared.cancel" (click)="cancel()" mat-dialog-close>
+          Cancel
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          jhiTranslate="contractmanager.shared.approve"
+          [mat-dialog-close]="message"
+          *ngIf="data.isApprovalDialog"
+        >
+          Approve
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          jhiTranslate="contractmanager.shared.reject"
+          [mat-dialog-close]="message"
+          *ngIf="!data.isApprovalDialog"
+        >
+          Reject
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</section>

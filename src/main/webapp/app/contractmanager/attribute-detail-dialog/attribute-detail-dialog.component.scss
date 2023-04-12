@@ -1,0 +1,13 @@
+@import '../../../content/scss/bootstrap-variables.scss';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~material-design-icons/iconfont/material-icons.css';
+table {
+  width: 100%;
+}
+.mat-dialog-title {
+  background-color: #9e9e9e;
+  height: 48px;
+  line-height: 48px;
+  padding-left: 8px;
+}

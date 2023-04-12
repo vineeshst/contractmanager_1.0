@@ -1,0 +1,45 @@
+<div class="dashboard-container">
+  <div class="d-flex mb-4">
+    <button mat-icon-button [routerLink]="['..']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <div [ngSwitch]="currentFilter">
+      <h3 class="f-medium" *ngSwitchCase="'a'">
+        <span jhiTranslate="contractmanager.dashboard.allAgreements">Agreements</span>
+      </h3>
+      <h3 class="f-medium" *ngSwitchCase="'pa'">
+        <span jhiTranslate="contractmanager.dashboard.agreementsPendingApproval">Agreements</span>
+      </h3>
+      <h3 class="f-medium" *ngSwitchCase="'ea'">
+        <span jhiTranslate="contractmanager.dashboard.expiringAgreements">Agreements</span>
+      </h3>
+      <h3 class="f-medium" *ngSwitchCase="'pe'">
+        <span jhiTranslate="contractmanager.dashboard.agreementsPendingExecution">Agreements</span>
+      </h3>
+    </div>
+  </div>
+  <mat-card class="h-100">
+    <div class="h-100 p-3" *ngIf="!pageLoading; else pageLoadingSpinner">
+      <div class="h-100" *ngIf="agreements.length > 0; else noAgreements">
+        <jhi-agreement-table [agreements]="agreements" [columns]="columns" [showPaginator]="true"> </jhi-agreement-table>
+      </div>
+      <!-- <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator> -->
+      <ng-template #noAgreements>
+        <div class="default-message">
+          <img class="mb-3" src="/content/images/no-entity.svg" alt="" />
+          <div class="text-center f-small text-disabled">
+            <div class="mb-1 f-20">No agreement available.</div>
+            <div>When you have, you’ll see them here.</div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <ng-template #pageLoadingSpinner>
+      <div class="load-spinner-wrapper">
+        <div class="load-spinner-container">
+          <mat-spinner></mat-spinner>
+        </div>
+      </div>
+    </ng-template>
+  </mat-card>
+</div>

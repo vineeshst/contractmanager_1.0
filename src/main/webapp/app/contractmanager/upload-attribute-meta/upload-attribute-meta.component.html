@@ -1,0 +1,25 @@
+<div class="dashboard-container flex-col-container">
+  <div class="title">
+    <button mat-icon-button [routerLink]="['/contractmanager/configuration']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span jhiTranslate="contractmanager.attributeManagement.uploadAttributes">Upload Attributes</span>
+  </div>
+  <mat-card>
+    <mat-card-content class="flex-row-container">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label jhiTranslate="contractmanager.attributeManagement.uploadAtttributeMeta">Upload Atttribute Meta data</mat-label>
+        <input matInput />
+        <mat-hint jhiTranslate="contractmanager.attributeManagement.uploadAtttributeMetaMaxLimit"
+          >Upload the attribute meta file (Max. size limit is 10MB for each file)</mat-hint
+        >
+      </mat-form-field>
+      <div>
+        <jhi-material-file-upload
+          (complete)="attributeMetaUploaded($event)"
+          target="/api/contracts/attributesmeta"
+        ></jhi-material-file-upload>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

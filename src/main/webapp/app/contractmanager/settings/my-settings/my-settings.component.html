@@ -1,0 +1,163 @@
+<div class="dashboard-container d-flex flex-column">
+  <div class="title mb-4">
+    <span jhiTranslate="contractmanager.settings.mySettings">My Settings</span>
+  </div>
+  <div class="form-container" [formGroup]="userForm">
+    <jhi-cm-stepper>
+      <!-- Personal Details Section -->
+      <cdk-step [stepControl]="userForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.settings.applicationSettings">App Settings</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.settings.applicationSettings">App Settings</span>
+        </div>
+      </cdk-step>
+
+      <!-- Preference -->
+      <cdk-step [stepControl]="userForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.settings.profileSettings">Profile Settings</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.settings.profileSettings">Profile Settings</span>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between" style="flex: 1">
+          <div class="container" formGroupName="preference">
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.recordsPerPage"
+                  >Records Per Page options (User Defined)</mat-label
+                  >
+                  <mat-select formControlName="recordsPerPage">
+                    <mat-option value="5"> 5 </mat-option>
+                    <mat-option value="10"> 10 </mat-option>
+                    <mat-option value="15"> 15 </mat-option>
+                    <mat-option value="20"> 20 </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.defaultChoiceGrid">Default Choice of Grid</mat-label>
+                  <mat-select formControlName="gridChoice">
+                    <mat-option value="grid"> Grid </mat-option>
+                    <mat-option value="list"> List </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.recordsLayout">Records Layout</mat-label>
+                  <mat-select formControlName="recordsLayout">
+                    <mat-option value="grid"> Grid </mat-option>
+                    <mat-option value="list"> List </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.dashboardLayout">Dashboard Layout</mat-label>
+                  <mat-select formControlName="dashboardLayout">
+                    <mat-option value="grid"> Grid </mat-option>
+                    <mat-option value="list"> List </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row mat-form-field-wrapper">
+              <div class="col d-flex justify-content-between align-items-center">
+                <span jhiTranslate="contractmanager.userManagement.searchPanelVisibility">Search Panel Visibility</span>
+                <div>
+                  <mat-slide-toggle formControlName="searchPanelVisible"></mat-slide-toggle>
+                </div>
+              </div>
+              <div class="col d-flex justify-content-between align-items-center">
+                <span jhiTranslate="contractmanager.userManagement.openRecordSameTab">Open every record in same browser tab</span>
+                <div>
+                  <mat-slide-toggle formControlName="openRecordInSameTab"></mat-slide-toggle>
+                </div>
+              </div>
+            </div>
+            <div class="row mat-form-field-wrapper">
+              <div class="col d-flex justify-content-between align-items-center">
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="mat-form-field-wrapper">
+              <span class="font-weight-bold" jhiTranslate="contractmanager.userManagement.localeSettings">Locale Settings</span>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.language">Language</mat-label>
+                  <mat-select formControlName="language" (selectionChange)="changeLanguage($event)" [(ngModel)]="user!.langKey">
+                    <mat-option value="en"> English </mat-option>
+                    <mat-option value="de"> Deutsch </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.timeZone">Time Zone</mat-label>
+                  <input formControlName="timeZone" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.dateFormat">Date Format</mat-label>
+                  <mat-select formControlName="dateFormat">
+                    <mat-option value="MMddyyyy"> MM/dd/yyyy </mat-option>
+                    <mat-option value="ddMMyyyy"> dd/MM/yyyy </mat-option>
+                    <mat-option value="yyyyMMdd"> yyyy/MM/dd </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.timeFormat">Time Format</mat-label>
+                  <mat-select formControlName="timeFormat">
+                    <mat-option value="hhmmss"> hh:mm:ss </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-50" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.preferredCurrency">Preferred Currency</mat-label>
+                  <mat-select formControlName="preferredCurrency">
+                    <mat-option value="eur"> Euro </mat-option>
+                    <mat-option value="usd"> US Dollar </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="flex-row-container stepper-control">
+            <button mat-raised-button color="primary" [disabled]="userForm.invalid" (click)="save()" jhiTranslate="contractmanager.shared.save">
+              Save
+            </button>
+          </div>
+        </div>
+      </cdk-step>
+      <cdk-step [stepControl]="userForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.settings.autoDelegation">Auto Delegation</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.settings.autoDelegation">Auto Delegation</span>
+        </div>
+      </cdk-step>
+    </jhi-cm-stepper>
+  </div>
+</div>

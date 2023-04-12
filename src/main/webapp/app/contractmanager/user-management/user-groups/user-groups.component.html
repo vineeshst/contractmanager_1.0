@@ -1,0 +1,40 @@
+<div class="dashboard-container">
+  <div class="title">
+    <button mat-icon-button [routerLink]="['/contractmanager/user-management']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span jhiTranslate="contractmanager.userManagement.userGroup">User Group</span>
+  </div>
+  <div class="grid-container tiles-container">
+    <div mat-ripple class="tile flex-container" [routerLink]="['view-user-groups']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/user-org.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.userManagement.userGroups">User Groups</div>
+      </div>
+    </div>
+    <div mat-ripple class="tile flex-container" [routerLink]="['add-user-group']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/user-org.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.userManagement.createUserGroups">Create User Groups</div>
+      </div>
+    </div>
+    <div mat-ripple class="tile flex-container" [routerLink]="['user-roles']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/user-org.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.userManagement.userRoles">User Roles</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,150 @@
+<div class="dashboard-container">
+  <div class="title" jhiTranslate="contractmanager.configuration.configuration">Configuration</div>
+  <div class="grid-container tiles-container">
+    <div
+      mat-ripple
+      class="tile flex-container"
+      [routerLink]="['./view-contract-types']"
+      *jhiHasPrivilege="{ name: securityEntity.CONTRACT_TYPE, privilege: privilege.VIEW }"
+    >
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-Add.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.contractTypes">Contract Types</div>
+      </div>
+    </div>
+    <div
+      mat-ripple
+      class="tile flex-container"
+      [routerLink]="['../configuration/create-contract-type']"
+      *jhiHasPrivilege="{ name: securityEntity.CONTRACT_TYPE, privilege: privilege.MANAGE }"
+    >
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-Add.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.createContractType">Create Contract Type</div>
+      </div>
+    </div>
+    <!-- <div mat-ripple class="tile flex-container" [routerLink]="['../contractmanager/cm/add-contract-type']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-Add.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.shared.publish">Publish</div>
+      </div>
+    </div> -->
+    <div mat-ripple class="tile flex-container" [routerLink]="['../upload-attribute-meta']">
+      <div class="tile-icon-container flex-container" *jhiHasPrivilege="{ name: securityEntity.ATTRIBUTES, privilege: privilege.VIEW }">
+        <div class="tile-icon">
+          <img src="/content/images/config-Add.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.shared.attribute">Attribute</div>
+      </div>
+    </div>
+    <!-- <div
+      mat-ripple
+      class="tile flex-container"
+      [routerLink]="['../configuration/view-contract-rules']"
+      *jhiHasPrivilege="{ name: securityEntity.RULES, privilege: privilege.VIEW }"
+    >
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-edit.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.rules">Rules</div>
+      </div>
+    </div> -->
+    <!-- <div
+      mat-ripple
+      class="tile flex-container"
+      [routerLink]="['../configuration/create-contract-rule']"
+      *jhiHasPrivilege="{ name: securityEntity.RULES, privilege: privilege.MANAGE }"
+    >
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-edit.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.createRule">Create Rule</div>
+      </div>
+    </div> -->
+    <!-- <div
+      mat-ripple
+      class="tile flex-container"
+      [routerLink]="['../contractmanager/upload-attribute-meta']"
+      *jhiHasPrivilege="{ name: securityEntity.MASTERDATA, privilege: privilege.MANAGE }"
+    >
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-upload.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.masterdata">Masterdata</div>
+      </div>
+    </div> -->
+    <!-- <div mat-ripple class="tile flex-container" [routerLink]="['../contractmanager/upload-attribute-meta']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-upload.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.aliasMaster">Alias Master</div>
+      </div>
+    </div> -->
+    <!-- <div mat-ripple class="tile flex-container" [routerLink]="['../contractmanager/upload-attribute-meta']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-upload.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.defaultSearchColumn">Default Search Column</div>
+      </div>
+    </div> -->
+    <!-- <div mat-ripple class="tile flex-container" [routerLink]="['../contractmanager/upload-attribute-meta']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-upload.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.promoteConfiguration">Promote Configuration</div>
+      </div>
+    </div> -->
+    <!-- <div mat-ripple class="tile flex-container" [routerLink]="['../contractmanager/upload-attribute-meta']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-upload.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.cascadeTeam">Cascade Team</div>
+      </div>
+    </div> -->
+    <!-- <div mat-ripple class="tile flex-container" [routerLink]="['../contractmanager/upload-attribute-meta']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-upload.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.configuration.reusableFeatures">Reusable Features</div>
+      </div>
+    </div> -->
+  </div>
+</div>

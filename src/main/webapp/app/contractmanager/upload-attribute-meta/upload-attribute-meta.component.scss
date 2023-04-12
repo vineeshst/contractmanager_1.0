@@ -1,0 +1,39 @@
+//@import "../../../content/scss/bootstrap-variables.scss";
+//@import '~bootstrap/scss/functions';
+//@import '~bootstrap/scss/variables';
+//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+//@import "~material-design-icons/iconfont/material-icons.css";
+.example-form {
+  min-width: 150px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.dashboard-container {
+  padding: 40px;
+  height: calc(100% - 80px);
+}
+.title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 2em;
+  letter-spacing: -1px;
+}
+.title > button {
+  display: inline;
+  vertical-align: text-bottom;
+}
+
+.flex-row-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0;
+  align-items: center;
+}
+
+mat-card {
+  height: 100%;
+}

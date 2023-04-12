@@ -1,0 +1,42 @@
+section {
+  padding: 2rem 0;
+  height: 100%;
+}
+
+.day-title {
+  padding: 11px 0;
+  background-color: #edf2f6;
+}
+
+.section-padding {
+  padding: 0 1.5rem;
+}
+
+.notification-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+#notif-scroll {
+  max-height: 95%;
+  overflow-y: scroll;
+}
+
+.alt-text {
+  text-align: center;
+  line-height: 5;
+}
+
+#clear-container {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+}
+
+.mat-secondary {
+  border: 1px solid #e0e0e0;
+  min-width: 90px;
+  color: #00aeef;
+  background-color: #f4f8fb;
+}

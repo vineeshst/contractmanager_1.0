@@ -1,0 +1,93 @@
+@import '../../../../content/scss/bootstrap-variables.scss';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~material-design-icons/iconfont/material-icons.css';
+
+.contrct-category-form {
+  min-width: 150px;
+  width: 100%;
+  height: 100%;
+}
+
+.dashboard-container {
+  padding: 40px;
+  height: calc(100% - 80px);
+}
+//.category-container {
+//  overflow-y: auto;
+//  height: calc(100vh - 40px);
+//  font-size: 13px;
+//  color: rgba(0, 0, 0, 0.6);
+//}
+.title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 2em;
+  letter-spacing: -1px;
+}
+.title > button {
+  display: inline;
+  vertical-align: text-bottom;
+}
+
+.form-container {
+  background-color: white;
+  flex: 100%;
+  //padding: 3.6%;
+  //margin-top: 30px;
+  position: relative;
+  //box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.03);
+}
+
+.flex-col-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.flex-row-container {
+  display: flex;
+  //flex-direction: row-reverse;
+  justify-content: center;
+}
+
+.flex-row-container > button {
+  margin-left: 50px;
+  width: 7%;
+}
+
+.comment-box {
+  height: 100px;
+}
+
+.comment-container {
+  margin-top: 20px;
+}
+
+// .mat-form-field-appearance-legacy .mat-form-field-underline {
+//   height: 0 !important;
+// }
+
+.full-width {
+  width: 100%;
+}
+.edit-container {
+  flex: 1;
+  margin-top: 8%;
+}
+
+.category-title {
+  //position: absolute;
+  //width: 30%;
+  //height: 29px;
+  //left: 749px;
+  //top: 355px;
+
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  letter-spacing: 0.02em;
+  color: #001833;
+}

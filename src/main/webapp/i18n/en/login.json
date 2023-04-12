@@ -1,0 +1,22 @@
+{
+  "login": {
+    "title": "Welcome",
+    "subtitle": "Please Login to your account",
+    "form": {
+      "password": "Password",
+      "password.placeholder": "Your password",
+      "rememberme": "Remember me",
+      "button": "Login"
+    },
+    "signUpButton": "Sign up",
+    "oauthLogin": "Continue with Google",
+    "messages": {
+      "error": {
+        "authentication": "<strong>Failed to sign in!</strong> Please check your credentials and try again."
+      }
+    },
+    "password": {
+      "forgot": "Forgot Password?"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+<section class="d-flex">
+  <header class="header ls-2">
+    <ol>
+      <ng-container *ngFor="let step of steps; let i = index; let first = first; let last = last">
+        <a (click)="selectedIndex = i">
+          <li>
+            <div class="stepper-line" [ngClass]="[first ? 'stepper-line-t50' : '', last ? 'stepper-line-b50' : '']" *ngIf="linear"></div>
+            <div class="stepper-option" [ngClass]="selectedIndex === i ? activeClass : ''">
+              <mat-icon class="stepper-icon active-icon" [ngClass]="getNavigationClass(step)">lens</mat-icon>
+              <ng-container *ngIf="step.stepLabel; else showLabelText" [ngTemplateOutlet]="step.stepLabel.template"> </ng-container>
+            </div>
+            <ng-template #showLabelText>
+              {{ step.label }}
+            </ng-template>
+          </li>
+        </a>
+      </ng-container>
+    </ol>
+  </header>
+
+  <div class="body">
+    <ng-container [ngTemplateOutlet]="selected!.content"></ng-container>
+  </div>
+</section>

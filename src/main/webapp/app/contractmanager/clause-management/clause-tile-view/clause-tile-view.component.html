@@ -1,0 +1,25 @@
+<div class="dashboard-container">
+  <div class="title" jhiTranslate="contractmanager.clauseManagement.clauseManagement">Clause Management</div>
+  <div class="grid-container tiles-container">
+    <div mat-ripple class="tile flex-container" [routerLink]="['./view-contract-clauses']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/list_view.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.clauseManagement.clauses">Clauses</div>
+      </div>
+    </div>
+    <div mat-ripple class="tile flex-container" [routerLink]="['./add-contract-clause']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-Add.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.clauseManagement.createClause">Create Clause</div>
+      </div>
+    </div>
+  </div>
+</div>

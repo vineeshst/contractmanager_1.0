@@ -1,0 +1,52 @@
+.header {
+  font-size: 24px;
+  padding: 20px 0;
+  color: black;
+}
+
+.attributes-container {
+  overflow-y: auto;
+  height: calc(100vh - 40px);
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.grid-2-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+}
+
+.grid-3-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.flex-row-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-container {
+  justify-content: space-between;
+  color: rgba(0, 0, 0, 0.6);
+
+  mat-icon {
+    font-size: 16px;
+    height: auto;
+    width: auto;
+  }
+}
+
+.dialog-control {
+  padding-top: 20px;
+  button {
+    margin: 10px;
+  }
+}
+
+.attributes-form {
+  padding: 10px;
+}

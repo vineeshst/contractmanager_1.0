@@ -1,0 +1,30 @@
+.summary-block {
+  margin-bottom: 10px;
+  padding: 20px 0;
+  font-size: 14px;
+  white-space: nowrap;
+
+  .form-header {
+    color: rgba(0, 0, 0, 0.38);
+    white-space: nowrap;
+  }
+
+  .section {
+    margin: 10px 0;
+  }
+  .form-pair {
+    width: 20%;
+    margin: 10px 0;
+  }
+  .user-role {
+    color: #00aeef;
+  }
+
+  .col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+button {
+  text-transform: uppercase;
+}

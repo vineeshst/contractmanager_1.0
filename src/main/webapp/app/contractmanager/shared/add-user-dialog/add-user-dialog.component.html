@@ -1,0 +1,57 @@
+<div class="m-4">
+  <div class="mb-3">
+    <div class="step-header">
+      <span jhiTranslate="contractmanager.userManagement.addUser">Add User</span>
+    </div>
+    <div>
+      <div class="header-search flex-container">
+        <button mat-icon-button>
+          <mat-icon>search</mat-icon>
+        </button>
+        <input class="search-control" type="text" placeholder="Search" [(ngModel)]="userSearchKey" #searchbar />
+        <button mat-icon-button (click)="userSearchKey = ''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="h-100 my-4 text-disabled">
+      <div class="d-flex p-2 user-list-header align-items-center mb-2 mr-3">
+        <div class="flex-even" jhiTranslate="contractmanager.userManagement.userName">User Name</div>
+        <div class="flex-even" jhiTranslate="contractmanager.userManagement.emailAddress">Email Address</div>
+        <div class="flex-even text-right" jhiTranslate="contractmanager.shared.action">Action</div>
+      </div>
+      <div class="user-list-container" *ngIf="users; else noUserTemplate">
+        <div class="user-item d-flex p-2 mb-3 mr-3" *ngFor="let user of users | userFilter: userSearchKey">
+          <span class="flex-even"> {{ (user.firstName + ' ' + user.lastName | titlecase) || 'N/A' }}</span>
+          <div class="flex-even">
+            <span> {{ user.email }}</span>
+          </div>
+          <div class="flex-even d-flex justify-content-end overflow-hidden">
+            <div class="cursor-pointer" *ngIf="!user.isSelected; else selected" (click)="user.isSelected = true">
+              <mat-icon class="select-user-image">add_circle</mat-icon>
+              <span class="select-template-text" jhiTranslate="contractmanager.shared.select">SELECT</span>
+            </div>
+            <ng-template #selected>
+              <div class="cursor-pointer" (click)="user.isSelected = false">
+                <mat-icon class="selected-user-image">check_circle_outline</mat-icon>
+                <span class="selected-user-text" jhiTranslate="contractmanager.shared.selected">SELECTED</span>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end p-2 text-disabled f-14">User Selected: {{ selectedUserCount }} of {{ users?.length }}</div>
+      <ng-template #noUserTemplate>
+        <div class="d-flex justify-content-center content align-items-center">
+          <span class="text-disabled" jhiTranslate="contractmanager.userManagement.noUsersAvailable"> No Users Available </span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <button mat-raised-button class="mr-2" mat-dialog-close jhiTranslate="contractmanager.shared.cancel">Cancel</button>
+    <button mat-raised-button class="ml-2" color="primary" (click)="addMembers()" jhiTranslate="contractmanager.userManagement.addUsers">
+      Add Users
+    </button>
+  </div>
+</div>

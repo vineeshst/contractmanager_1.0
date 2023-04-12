@@ -1,0 +1,19 @@
+<div class="d-flex flex-column justify-content-between h-100">
+  <mat-dialog-content>
+    {{ data.message }}
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="justify-content-center" [ngSwitch]="data.dialogType">
+    <div *ngSwitchCase="'delete'">
+      <button class="mr-2" mat-raised-button jhiTranslate="contractmanager.shared.cancel" (click)="cancel()" mat-dialog-close>
+        Cancel
+      </button>
+      <button mat-raised-button color="warn" [mat-dialog-close]="true" jhiTranslate="contractmanager.shared.delete"></button>
+    </div>
+
+    <div *ngSwitchCase="'cancel'">
+      <button class="mr-2" mat-raised-button jhiTranslate="contractmanager.shared.no" (click)="cancel()" mat-dialog-close></button>
+      <button mat-raised-button color="primary" [mat-dialog-close]="true" jhiTranslate="contractmanager.shared.yes"></button>
+    </div>
+  </mat-dialog-actions>
+</div>

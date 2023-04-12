@@ -1,0 +1,91 @@
+<div class="nav-container">
+  <button class="menu" mat-button routerLink="./dashboard" routerLinkActive="active">
+    <div class="flex-container">
+      <img src="/content/images/nav-home.svg" alt="" />
+      <span jhiTranslate="contractmanager.shared.home">Home</span>
+    </div>
+  </button>
+
+  <button
+    class="menu"
+    mat-button
+    routerLink="./agreement"
+    routerLinkActive="active"
+    *jhiHasPrivilege="{ name: securityEntity.AGREEMENT, privilege: privilege.MANAGE }"
+  >
+    <div class="flex-container">
+      <img src="/content/images/nav-agreement.svg" alt="" />
+      <span jhiTranslate="contractmanager.layouts.sidebar.agreementManagement">Agreement Management</span>
+    </div>
+  </button>
+  <!--  <button class="menu" mat-button routerLink="/dashboard" (click)= "activateClass('association-management')" [ngClass]= "{'active': selected == 'association-management'}"-->
+  <!--          *jhiHasPrivilege="{ name: 'Associated Document', privilege: 2 }">-->
+  <!--    <div class="flex-container">-->
+  <!--      <img src="/content/images/nav-associations.svg" alt="">-->
+  <!--      <span>Association Management</span>-->
+  <!--    </div>-->
+  <!--  </button>-->
+  <!--  <button class="menu" mat-button routerLink="/dashboard" (click)= "activateClass('compliance-management')" [ngClass]= "{'active': selected == 'compliance-management'}">-->
+  <!--    <div class="flex-container">-->
+  <!--      <img src="/content/images/nav-compliance.svg" alt="">-->
+  <!--      <span>Compliance Management</span>-->
+  <!--    </div>-->
+  <!--  </button>-->
+  <button
+    class="menu"
+    mat-button
+    routerLink="./template"
+    routerLinkActive="active"
+    *jhiHasPrivilege="{ name: securityEntity.TEMPLATES, privilege: privilege.VIEW }"
+  >
+    <div class="flex-container">
+      <img src="/content/images/nav-template.svg" alt="" />
+      <span jhiTranslate="contractmanager.layouts.sidebar.templateManagement">Template Management</span>
+    </div>
+  </button>
+
+  <button
+    class="menu"
+    mat-button
+    routerLink="./clause"
+    routerLinkActive="active"
+    *jhiHasPrivilege="{ name: securityEntity.CLAUSE, privilege: privilege.VIEW }"
+  >
+    <div class="flex-container">
+      <img src="/content/images/nav-clause.svg" alt="" />
+      <span jhiTranslate="contractmanager.layouts.sidebar.clauseManagement">Clause Management</span>
+    </div>
+  </button>
+
+  <button
+    class="menu"
+    mat-button
+    routerLink="./user-management"
+    routerLinkActive="active"
+    *jhiHasPrivilege="{ name: securityEntity.ADMIN_TASKS, privilege: privilege.VIEW }"
+  >
+    <div class="flex-container">
+      <img src="/content/images/nav-user.svg" alt="" />
+      <span jhiTranslate="contractmanager.layouts.sidebar.userManagement">User Management</span>
+    </div>
+  </button>
+
+  <button class="menu" mat-button routerLink="./configuration" routerLinkActive="active">
+    <div class="flex-container">
+      <img src="/content/images/nav-config.svg" alt="" />
+      <span jhiTranslate="contractmanager.layouts.sidebar.configuration">Configuration</span>
+    </div>
+  </button>
+  <!--  <button class="menu" mat-button routerLink="./configuration" (click)= "activateClass('reports')" [ngClass]= "{'active': selected == 'reports'}">-->
+  <!--    <div class="flex-container">-->
+  <!--      <img src="/content/images/nav-reports.svg" alt="">-->
+  <!--      <span>Reports</span>-->
+  <!--    </div>-->
+  <!--  </button>-->
+  <button class="menu help-menu" mat-button>
+    <div class="flex-container">
+      <img src="/content/images/nav-help.svg" alt="" />
+      <span jhiTranslate="contractmanager.shared.help">Help</span>
+    </div>
+  </button>
+</div>

@@ -1,0 +1,54 @@
+<div class="main-header flex-container">
+  <div class="header-logo">
+    <a routerLink="/">
+      <img class="logo-img" src="/content/images/Grouplogo.png" />
+    </a>
+  </div>
+  <div class="header-search flex-container">
+    <button mat-button mat-icon-button (click)="searchClose()">
+      <mat-icon>search</mat-icon>
+    </button>
+    <input class="search-control" type="text" placeholder="Search" [(ngModel)]="searchKey" [matAutocomplete]="auto" />
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of agreements | agreementFilter: searchKey"
+        [value]=""
+        [routerLink]="['agreement/add-contract-agreement', option.id]"
+      >
+        {{ option.entityName }}
+      </mat-option>
+    </mat-autocomplete>
+    <button mat-button mat-icon-button (click)="searchClose()" *ngIf="searchKey">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="header-profile flex-container">
+    <div class="profile-name">
+      <span>{{ profileName | titlecase }}</span>
+      <button mat-button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <div class="profile-menu">
+          <button mat-menu-item routerLink="settings">
+            <span class="nav-menu-image"><img src="/content/images/settings.svg" alt="" /></span>
+            <span jhiTranslate="global.menu.account.settings">Settings</span>
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <span class="nav-menu-image"><img src="/content/images/logout.svg" alt="" /></span>
+            <span jhiTranslate="global.menu.account.logout">Sign out</span>
+          </button>
+        </div>
+      </mat-menu>
+    </div>
+    <div class="profile-info">
+      <ngx-avatar class="avatar" [name]="profileName" size="39" bgColor="#033f88"></ngx-avatar>
+    </div>
+    <div class="profile-notification">
+      <button mat-button mat-icon-button (click)="toggleNavigation()">
+        <img src="/content/images/notif-pending.svg" alt="" *ngIf="hasNotification" />
+        <img src="/content/images/notif-n.svg" *ngIf="!hasNotification" style="height: 18px" />
+      </button>
+    </div>
+  </div>
+</div>

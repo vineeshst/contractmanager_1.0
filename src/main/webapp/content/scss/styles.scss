@@ -1,0 +1,85 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+
+$md-mcgpalette0: (
+  50: #e1e8f1,
+  100: #b3c5db,
+  200: #819fc4,
+  300: #4e79ac,
+  400: #285c9a,
+  500: #023f88,
+  600: #023980,
+  700: #013175,
+  800: #01296b,
+  900: #011b58,
+  A100: #8aa2ff,
+  A200: #577aff,
+  A400: #2451ff,
+  A700: #0a3dff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$md-mcgpalette1: (
+  50: #e0f5fd,
+  100: #b3e7fa,
+  200: #80d7f7,
+  300: #4dc6f4,
+  400: #26baf1,
+  500: #00aeef,
+  600: #00a7ed,
+  700: #009deb,
+  800: #0094e8,
+  900: #0084e4,
+  A100: #ffffff,
+  A200: #d8ecff,
+  A400: #a5d4ff,
+  A700: #8bc8ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+
+$theming-material-components-primary: mat-palette($md-mcgpalette0);
+$theming-material-components-accent: mat-palette($md-mcgpalette1);
+$theming-material-components-warn: mat-palette($mat-red);
+
+$theming-material-components-theme: mat-light-theme(
+  $theming-material-components-primary,
+  $theming-material-components-accent,
+  $theming-material-components-warn
+);
+
+@include angular-material-theme($theming-material-components-theme);

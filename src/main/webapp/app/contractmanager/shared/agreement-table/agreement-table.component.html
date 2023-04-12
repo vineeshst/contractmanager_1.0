@@ -1,0 +1,48 @@
+<div>
+  <mat-table [dataSource]="agreementsDataSource" matSort>
+    <ng-container matColumnDef="agreementName">
+      <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.agreementManagement.agreementName_1">
+        Agreement Name
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.agreementName }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="agreementCode">
+      <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.agreementManagement.agreementCode"> Agreement Code </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.agreementCode | uppercase }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="contractTypeName">
+      <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.agreementManagement.contractType"> Contract Type </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.contractType.name }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="createdBy">
+      <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdBy"> Created By </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.createdBy | titlecase }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="createdOn">
+      <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdOn"> Created On </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.createdDate | date: 'MMM d, y, h:mm a' }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="agreementStatus">
+      <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.status_1"> Status </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ getDisplayStatus(element.agreementStatus) | titlecase }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef class="flex-grow-0"> </mat-header-cell>
+      <mat-cell *matCellDef="let element" class="flex-grow-0 px-3">
+        <img src="/content/images/detail-view-arrow.svg" />
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+    <mat-row class="cursor-pointer" *matRowDef="let row; columns: columns" (click)="navigateTo(row)"></mat-row>
+  </mat-table>
+  <ng-container *ngIf="showPaginator">
+    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+  </ng-container>
+</div>

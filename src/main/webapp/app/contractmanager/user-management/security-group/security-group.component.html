@@ -1,0 +1,30 @@
+<div class="dashboard-container">
+  <div class="title">
+    <button mat-icon-button [routerLink]="['/contractmanager/user-management']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span jhiTranslate="contractmanager.userManagement.securityGroup"></span>
+  </div>
+  <div class="grid-container tiles-container">
+    <div mat-ripple class="tile flex-container" [routerLink]="['view-security-groups']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/user-org.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.userManagement.securityGroups">Security Groups</div>
+      </div>
+    </div>
+    <div mat-ripple class="tile flex-container" [routerLink]="['add-security-group']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/user-org.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.userManagement.createSecurityGroups">Create Security Groups</div>
+      </div>
+    </div>
+  </div>
+</div>

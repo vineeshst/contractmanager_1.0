@@ -1,0 +1,248 @@
+<div class="dashboard-container">
+  <div class="d-flex justify-content-between">
+    <div class="title" jhiTranslate="contractmanager.dashboard.dashboard">Dashboard</div>
+    <div id="tile-toggle">
+      <mat-button-toggle-group value="grid">
+        <mat-button-toggle (click)="choiceIsGrid = true" value="grid"><mat-icon>view_module</mat-icon></mat-button-toggle>
+        <mat-button-toggle (click)="choiceIsGrid = false" value="list"><mat-icon>list</mat-icon></mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <div class="grid-container tiles-container" *ngIf="choiceIsGrid; else listView">
+    <div mat-ripple mat-button class="tile flex-container" [routerLink]="['./my-tasks']">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/tile-tasks.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-count title" *ngIf="dashboard">{{ dashboard.taskCount ?? 0 }}</div>
+        <div class="tile-info-label" jhiTranslate="contractmanager.dashboard.myTasks">My Tasks</div>
+      </div>
+    </div>
+    <div mat-ripple class="tile flex-container" [routerLink]="['/contractmanager/dashboard/agreements']" [queryParams]="{ q: 'a' }">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/tile-agreements.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-count title" *ngIf="dashboard">{{ dashboard.agreementsCount ?? 0 }}</div>
+        <div class="tile-info-label" jhiTranslate="contractmanager.dashboard.allAgreements">All Agreements</div>
+      </div>
+    </div>
+    <div mat-ripple class="tile flex-container" [routerLink]="['/contractmanager/dashboard/agreements']" [queryParams]="{ q: 'pa' }">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/tile-pen-apv-req.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-count title">{{ waitingForApproval.length }}</div>
+        <div class="tile-info-label" jhiTranslate="contractmanager.dashboard.agreementsPendingApproval">Agreements Pending Approval</div>
+      </div>
+    </div>
+    <div mat-ripple class="tile flex-container" [routerLink]="['/contractmanager/dashboard/agreements']" [queryParams]="{ q: 'ea' }">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/tile-exp-agmt.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-count title">0</div>
+        <div class="tile-info-label" jhiTranslate="contractmanager.dashboard.expiringAgreements">Expiring Agreements</div>
+      </div>
+    </div>
+    <div mat-ripple class="tile flex-container" [routerLink]="['/contractmanager/dashboard/agreements']" [queryParams]="{ q: 'pe' }">
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/tile-exp-agmt.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-count title">{{ pendingExecution.length }}</div>
+        <div class="tile-info-label" jhiTranslate="contractmanager.dashboard.agreementsPendingExecution">Agreements Pending Execution</div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #listView>
+    <div id="list">
+      <div class="tiles-container">
+        <div class="mb-3">
+          <mat-accordion>
+            <mat-expansion-panel #t_ep>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="f-bold">My Tasks ({{ myTasksDataSource.data.length }})</div>
+                </mat-panel-title>
+                <span *ngIf="t_ep.expanded && myTasksDataSource.data.length > 0" class="px-3 f-blue" [routerLink]="['my-tasks']"
+                  >View All</span
+                >
+              </mat-expansion-panel-header>
+              <div class="list-tile list-flex-container">
+                <div class="tile-info">
+                  <div *ngIf="myTasksDataSource && myTasksDataSource.data.length > 0; else noTasks">
+                    <mat-table [dataSource]="myTasksDataSource" matSort>
+                      <ng-container matColumnDef="taskName">
+                        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.dashboard.task"> Task </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <div [ngSwitch]="element.type">
+                            <span *ngSwitchCase="'CONTRACT_TYPE_APPROVAL'">Contract Type Approval</span>
+                            <span *ngSwitchCase="'CONTRACT_AGREEMENT_APPROVAL'">Agreement Approval</span>
+                            <span *ngSwitchCase="'TEMPLATE_APPROVAL'">Template Approval</span>
+                            <span *ngSwitchCase="'CLAUSE_APPROVAL'">Clause Approval</span>
+                            <span *ngSwitchCase="'CONTRACT_AGREEMENT_SIGNATURE'">Signature Request</span>
+                          </div>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="recordName">
+                        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.dashboard.recordName">
+                          Record Name
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.recordName }} </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="receivedOn" jhiTranslate="contractmanager.dashboard.receivedOn">
+                        <mat-header-cell *matHeaderCellDef> Received On </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.createdDate | date: 'MMM d, y, h:mm a' }} </mat-cell>
+                      </ng-container>
+                      <mat-header-row *matHeaderRowDef="myTasksColumns; sticky: true"></mat-header-row>
+                      <mat-row
+                        class="cursor-pointer"
+                        *matRowDef="let row; columns: myTasksColumns"
+                        (click)="route(row.type, row.entityId)"
+                      ></mat-row>
+                    </mat-table>
+                  </div>
+                </div>
+                <ng-template #noTasks>
+                  <div class="default-message">
+                    <img class="mb-3" src="/content/images/no-entity.svg" alt="" />
+                    <div class="text-center f-small text-disabled">
+                      <div class="mb-1 f-20">No task available.</div>
+                      <div>When you have, you’ll see them here.</div>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <div class="mb-3">
+          <mat-accordion>
+            <mat-expansion-panel #a_ep>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="f-bold">
+                    <span jhiTranslate="contractmanager.agreementManagement.agreements">Agreements</span> ({{ allAgreements.length }})
+                  </div>
+                </mat-panel-title>
+                <span
+                  *ngIf="a_ep.expanded && allAgreements.length > 0"
+                  class="px-3 f-blue"
+                  [routerLink]="['agreements']"
+                  [queryParams]="{ q: 'a' }"
+                  >View All</span
+                >
+              </mat-expansion-panel-header>
+              <div *ngIf="allAgreements.length > 0; else noAgreement">
+                <jhi-agreement-table [agreements]="allAgreements" [columns]="agreementsColumns"> </jhi-agreement-table>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <div class="mb-3">
+          <mat-accordion>
+            <mat-expansion-panel #pa_ep>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="f-bold">
+                    <span jhiTranslate="contractmanager.agreementManagement.agreementsPendingApproval">Agreements Pending Approval</span>
+                    ({{ waitingForApproval.length }})
+                  </div>
+                </mat-panel-title>
+                <span
+                  *ngIf="pa_ep.expanded && waitingForApproval.length > 0"
+                  class="px-3 f-blue"
+                  [routerLink]="['agreements']"
+                  [queryParams]="{ q: 'pa' }"
+                  >View All</span
+                >
+              </mat-expansion-panel-header>
+              <div class="list-tile list-flex-container">
+                <div *ngIf="waitingForApproval.length > 0; else noAgreement">
+                  <jhi-agreement-table [agreements]="waitingForApproval" [columns]="agreementsColumns"> </jhi-agreement-table>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <div class="mb-3">
+          <mat-accordion>
+            <mat-expansion-panel #pe_ep>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="f-bold">
+                    <span jhiTranslate="contractmanager.agreementManagement.agreementsPendingExecution">Agreements Pending Execution</span>
+                    ({{ pendingExecution.length }})
+                  </div>
+                </mat-panel-title>
+                <span
+                  *ngIf="pe_ep.expanded && pendingExecution.length > 0"
+                  class="px-3 f-blue"
+                  [routerLink]="['agreements']"
+                  [queryParams]="{ q: 'pe' }"
+                  >View All</span
+                >
+              </mat-expansion-panel-header>
+              <div class="list-tile list-flex-container">
+                <div *ngIf="pendingExecution.length > 0; else noAgreement">
+                  <jhi-agreement-table [agreements]="pendingExecution" [columns]="agreementsColumns"> </jhi-agreement-table>
+                </div>
+                <ng-template #noAgreement>
+                  <div class="default-message">
+                    <img class="mb-3" src="/content/images/no-entity.svg" alt="" />
+                    <div class="text-center f-small text-disabled">
+                      <div class="mb-1 f-20">No agreement available.</div>
+                      <div>When you have, you’ll see them here.</div>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <div class="mb-3">
+          <mat-accordion>
+            <mat-expansion-panel #r_ep>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="f-bold" jhiTranslate="contractmanager.dashboard.myRecentActivities">My Recent Activities</div>
+                </mat-panel-title>
+                <span *ngIf="r_ep.expanded && false" class="px-3 f-blue">View All</span>
+              </mat-expansion-panel-header>
+              <div class="tile flex-container">
+                <div class="tile-info">
+                  <div *ngIf="false; else noaAtivity"></div>
+                  <ng-template #noaAtivity>
+                    <div class="default-message">
+                      <img class="mb-3" src="/content/images/no-entity.svg" alt="" />
+                      <div class="text-center f-small text-disabled">
+                        <div class="mb-1 f-20">No activity available.</div>
+                        <div>When you have, you’ll see them here.</div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

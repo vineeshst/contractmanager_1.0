@@ -1,0 +1,156 @@
+<div class="attributes-container" [formGroup]="attributesForm">
+  <div class="attributes-form">
+    <div class="grid-2-col">
+      <div class="header">
+        <span jhiTranslate="contractmanager.configuration.editAttribute">Edit Attribute</span>
+      </div>
+      <div></div>
+      <mat-form-field appearance="fill">
+        <mat-label jhiTranslate="contractmanager.shared.name">Name</mat-label>
+        <input formControlName="attributeName" matInput [readonly]="isEditMode" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label jhiTranslate="contractmanager.shared.displayName">Display Name</mat-label>
+        <input formControlName="displayName" matInput />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label jhiTranslate="contractmanager.configuration.pageName">Page Name</mat-label>
+        <input formControlName="pageName" matInput />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label jhiTranslate="contractmanager.shared.dataType">Data Type</mat-label>
+        <mat-select formControlName="dataType">
+          <mat-option value="auto">Auto</mat-option>
+          <mat-option value="boolean">Boolean</mat-option>
+          <mat-option value="choice">Choice</mat-option>
+          <mat-option value="currency">Currency</mat-option>
+          <mat-option value="date">Date</mat-option>
+          <mat-option value="dateTime">DateTime</mat-option>
+          <mat-option value="email">Email</mat-option>
+          <mat-option value="fileSelection">File Selection</mat-option>
+          <mat-option value="label">Label</mat-option>
+          <mat-option value="multipleSelection">Multiple Selection</mat-option>
+          <mat-option value="number">Number</mat-option>
+          <mat-option value="percentage">Percentage</mat-option>
+          <mat-option value="richTextArea">Rich Text Area</mat-option>
+          <mat-option value="string">String</mat-option>
+          <mat-option value="text">Text Area</mat-option>
+          <mat-option value="url">URL</mat-option>
+          <mat-option value="user">User</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label jhiTranslate="contractmanager.shared.group">Group</mat-label>
+        <mat-select formControlName="group" app>
+          <mat-option> </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label jhiTranslate="contractmanager.shared.helpMessage">Help Message</mat-label>
+        <input formControlName="helpMessage" matInput />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label jhiTranslate="contractmanager.shared.source">Source</mat-label>
+        <mat-select formControlName="source" app>
+          <mat-option value="user">User</mat-option>
+          <mat-option value="integrated">Integrated</mat-option>
+          <mat-option value="script">Script</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div></div>
+    </div>
+
+    <div class="grid-3-col" formGroupName="attributeOptions">
+      <mat-checkbox formControlName="isGlobal" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isGlobal">Is Global</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isDefault" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isDefault">Is Default</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isEditable" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isEditable">Is Editable</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isMandatory" color="primary"
+        ><span jhiTranslate="contractmanager.shared.isMandatory">Is Mandatory</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="defaultByRule" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.defaultByRule">Default by rule</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isInherit" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isInherit">Is Inherit</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="tempateCreation" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.templateCreation">Template creation</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isSearchable" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isSearchable">Is Searchable</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isConditional" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isConditional">Is Conditional</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isLookup" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isLookup">Is Lookup</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isMultiSelect" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isMultiSelect">Is Multi select</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="hasLookupFilter" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.hasLookupFilter">Has lookup filter</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isCasacde" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isCasacde">Is Casacde</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="justificationRequired" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.justificationRequired">Justification required</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isSupersedableByAmendments" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isSupersedableByAmendments">Is Supersedable by amendments</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isSupersedableByAssignments" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isSupersedableByAssignments">Is Supersedable by assignments</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isSupersedableByTermaination" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isSupersedableByTermaination"
+          >Is Supersedable by termaination</span
+        ></mat-checkbox
+      >
+      <mat-checkbox formControlName="isInheritOnAmendments" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isInheritOnAmendments">Is Inherit on amendments</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isDependsOnValueByReference" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isDependsOnValueByReference"
+          >Is Depends on value by reference</span
+        ></mat-checkbox
+      >
+      <mat-checkbox formControlName="enableExpressions" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.enableExpressions">Enable expressions</span></mat-checkbox
+      >
+      <mat-checkbox formControlName="isAiDiscoverable" color="primary"
+        ><span jhiTranslate="contractmanager.configuration.isAiDiscoverable">Is AI discoverable</span></mat-checkbox
+      >
+    </div>
+    <div class="grid-2-col">
+      <div class="header">
+        <span jhiTranslate="contractmanager.configuration.conditional">Conditional</span>
+      </div>
+      <div></div>
+      <mat-form-field appearance="fill">
+        <mat-label jhiTranslate="contractmanager.configuration.dependsOnAttribute">Depends on attribute</mat-label>
+        <mat-select formControlName="dependsOnAttribute" app>
+          <mat-option> </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="flex-row-container toggle-container">
+        <span jhiTranslate="contractmanager.configuration.dependsOnValue">Depends on Value<mat-icon>help_outline</mat-icon> </span>
+        <div>
+          <mat-slide-toggle></mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-row-container dialog-control">
+      <button mat-button color="primary" mat-dialog-close jhiTranslate="contractmanager.shared.cancel">Cancel</button>
+      <button mat-raised-button color="primary" (click)="save()" jhiTranslate="contractmanager.shared.save">Save</button>
+    </div>
+  </div>
+</div>

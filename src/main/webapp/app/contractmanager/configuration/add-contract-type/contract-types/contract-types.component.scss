@@ -1,0 +1,50 @@
+.flex-col-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-container {
+  padding: 20px;
+  height: 100%;
+}
+
+.title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 2em;
+  letter-spacing: -1px;
+}
+
+.title > button {
+  display: inline;
+  vertical-align: text-bottom;
+}
+
+.flex-row-container {
+  display: flex;
+  align-items: stretch;
+
+  > div {
+    width: 25%;
+    height: 300px;
+    margin: 0.5%;
+  }
+}
+
+.contract-type-tile {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px solid rgba(0, 24, 51, 0.24);
+  color: #001833;
+  cursor: pointer;
+
+  .tile-content {
+    img {
+      display: block;
+      margin: 0 auto;
+      width: 70px;
+      height: 90px;
+    }
+  }
+}

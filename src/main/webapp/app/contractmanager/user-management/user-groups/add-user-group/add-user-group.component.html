@@ -1,0 +1,239 @@
+<div class="dashboard-container d-flex flex-column">
+  <div class="title mb-4">
+    <button mat-icon-button [routerLink]="['/contractmanager/user-management/user-groups/view-user-groups']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span *ngIf="displayMode == 'CREATE'; else editUg" jhiTranslate="contractmanager.userManagement.createUserGroup"
+      >Create User Group</span
+    >
+    <ng-template #editUg>{{ userGroupName?.value }}</ng-template>
+  </div>
+  <div class="form-container">
+    <jhi-cm-stepper #cdkStepper [formGroup]="userGroupForm" [linear]="displayMode == 'CREATE'">
+      <cdk-step [stepControl]="userGroupForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.details">Details</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.shared.details">Details</span>
+          <div>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between flex-even" *ngIf="displayMode != 'VIEW'; else detailsTemplate">
+          <div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.name">Name</mat-label>
+                  <input formControlName="name" matInput required />
+                  <mat-error *ngIf="userGroupName?.errors?.required" jhiTranslate="contractmanager.userManagement.userGroupNameRequired"
+                    >User Group Name is required</mat-error
+                  >
+                  <mat-error *ngIf="userGroupName?.errors?.minlength" jhiTranslate="contractmanager.userManagement.userGroupNameMinLength"
+                    >User Group Name must be at least 3 characters</mat-error
+                  >
+                  <mat-error *ngIf="userGroupName?.errors?.maxlength" jhiTranslate="contractmanager.userManagement.userGroupNameMaxLength"
+                    >User Group Name must be less than 30 characters</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.description">Description</mat-label>
+                  <input formControlName="description" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between mt-4" *ngIf="displayMode == 'CREATE'; else buttons">
+          <div style="min-width: 100px"></div>
+          <div>
+            <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+            <button mat-raised-button [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+          </div>
+          <button mat-button matStepperNext [disabled]="userGroupForm.invalid" jhiTranslate="contractmanager.shared.next">Next</button>
+        </div>
+      </cdk-step>
+      <cdk-step>
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.userManagement.users">Users</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.userManagement.users">Users</span>
+          <div>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="openAddUserDialog()"
+              *ngIf="displayMode != 'VIEW'"
+              jhiTranslate="contractmanager.userManagement.userManagement"
+            >
+              Add User
+            </button>
+            <div>
+              <ng-container *ngTemplateOutlet="edit"></ng-container>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-start h-100 text-disabled" *ngIf="displayMode != 'VIEW'; else usersTemplate">
+          <div class="d-flex p-2 user-list-header align-items-center mb-2">
+            <div class="flex-even" jhiTranslate="contractmanager.userManagement.userName">User Name</div>
+            <div class="flex-even" jhiTranslate="contractmanager.userManagement.emailAddress">Email Address</div>
+            <div class="flex-even text-right" jhiTranslate="contractmanager.shared.action">Action</div>
+          </div>
+          <div class="flex-even" *ngIf="selectedUsers; else noUsers">
+            <div *ngFor="let user of selectedUsers">
+              <div class="user-item d-flex p-2 mb-3 align-items-center" *ngIf="user.isSelected">
+                <span class="flex-even"> {{ (user.firstName + ' ' + user.lastName | titlecase) || 'N/A' }}</span>
+                <div class="flex-even">
+                  <span> {{ user.email }}</span>
+                </div>
+                <div class="flex-even d-flex justify-content-end overflow-hidden">
+                  <div class="cursor-pointer" (click)="user.isSelected = false">
+                    <mat-icon>delete_outline</mat-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noUsers>
+            <div
+              class="h-100 d-flex justify-content-center align-items-center text-disabled"
+              jhiTranslate="contractmanager.userManagement.noUsersAdded"
+            >
+              No users added yet
+            </div>
+          </ng-template>
+        </div>
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between mt-4">
+            <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+            </div>
+            <button mat-button matStepperNext jhiTranslate="contractmanager.shared.next">Next</button>
+          </div>
+        </div>
+      </cdk-step>
+      <cdk-step *ngIf="displayMode == 'CREATE'">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.verify">Verify</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span>Verify</span>
+        </div>
+
+        <div class="d-flex flex-column justify-content-start h-100">
+          <ng-container *ngTemplateOutlet="detailsTemplate"></ng-container>
+          <ng-container *ngTemplateOutlet="usersTemplate"></ng-container>
+        </div>
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between my-4">
+            <button matStepperPrevious mat-button jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="userGroupForm.invalid"
+                (click)="save()"
+                jhiTranslate="contractmanager.shared.create"
+              >
+                Create
+              </button>
+            </div>
+            <div style="min-width: 100px"></div>
+          </div>
+        </div>
+      </cdk-step>
+    </jhi-cm-stepper>
+    <ng-template #detailsTemplate>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.shared.details">Details</span>
+          </div>
+          <div class="section">
+            <div class="form-pair">
+              <div class="form-header" jhiTranslate="contractmanager.shared.name">Name</div>
+              <div class="form-value">{{ userGroupForm.value.name }}</div>
+            </div>
+            <div class="form-pair">
+              <div class="form-header" jhiTranslate="contractmanager.shared.description">Description</div>
+              <div class="form-value">{{ userGroupForm.value.description || '-' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #usersTemplate>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.userManagement.users">Users</span>
+          </div>
+          <div class="flex-row-wrap section">
+            <div class="form-pair p-3" *ngFor="let user of selectedUsers">
+              <div class="form-value">{{ user.firstName + ' ' + user.lastName | titlecase }}</div>
+              <div class="form-value user-role" style="text-overflow: ellipsis">{{ user.email }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #update>
+      <div class="stepper-control">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="userGroupForm.invalid"
+          (click)="save()"
+          jhiTranslate="contractmanager.shared.save"
+        >
+          Save
+        </button>
+      </div>
+    </ng-template>
+    <ng-template #buttons>
+      <div class="d-flex justify-content-center mt-4">
+        <div *ngIf="displayMode == 'UPDATE'">
+          <div>
+            <button mat-button color="primary" (click)="cancel('update')">Cancel</button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="userGroupForm.invalid"
+              (click)="save()"
+              jhiTranslate="contractmanager.shared.save"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+        <button mat-button *ngIf="displayMode == 'VIEW'" color="primary" (click)="delete()">Delete</button>
+      </div>
+    </ng-template>
+    <ng-template #edit>
+      <div *ngIf="displayMode == 'VIEW'">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="switchToEditMode()"
+          jhiTranslate="contractmanager.shared.edit"
+          *ngIf="entityRole == 'PRIMARY_OWNER'"
+        >
+          Edit
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

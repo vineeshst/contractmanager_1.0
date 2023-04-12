@@ -1,0 +1,96 @@
+<section>
+  <div id="popup" class="p-4">
+    <div>
+      <div class="d-flex justify-content-between mb-3">
+        <h4 class="f-medium">Add User</h4>
+        <mat-icon mat-icon-button class="cursor-pointer" mat-dialog-close>close</mat-icon>
+      </div>
+
+      <div>
+        <div class="header-search flex-container">
+          <input class="search-control" type="text" placeholder="Search Users/Teams" [(ngModel)]="userSearchKey" #searchbar />
+          <button mat-icon-button (click)="userSearchKey = ''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="h-100 my-4 text-disabled" [formGroup]="notificationConfigForm">
+        <div class="d-flex p-3 user-list-header align-items-center mb-3">
+          <div class="flex-even" jhiTranslate="contractmanager.userManagement.userName">User Name</div>
+          <div class="flex-even text-center" jhiTranslate="contractmanager.userManagement.members">Members</div>
+          <div class="flex-even text-center" jhiTranslate="contractmanager.userManagement.notifications">Notifications</div>
+          <div class="flex-even text-center mr-3"><span id="header-span" jhiTranslate="contractmanager.shared.action">Action</span></div>
+        </div>
+        <div class="user-list-container" *ngIf="users; else noUserTemplate" formArrayName="notifications">
+          <div class="user-item d-flex px-3 py-2 mb-3 mr-3" *ngFor="let user of users | userFilter: userSearchKey; let i = index">
+            <span class="flex-even t-align-c"> {{ (user.firstName + ' ' + user.lastName | titlecase) || 'N/A' }}</span>
+            <span class="flex-even t-align-c f-14 f-normal"> </span>
+            <!-- <mat-slide-toggle></mat-slide-toggle> -->
+            <div class="flex-even d-flex justify-content-end overflow-hidden f-normal">
+              <div class="select-dropdown">
+                <select
+                  class="f-normal f-14"
+                  (change)="user.selectedRole = $any($event.target).value"
+                  [ngClass]="user.selectedRole ? 'f-blue' : ''"
+                >
+                  <option [disabled]="user.selectedRole">Select Role</option>
+                  <option [value]="field" *ngFor="let field of fields" [selected]="user.selectedRole == field">
+                    {{ getValue(field) }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="user-item d-flex px-3 py-2 mb-3 mr-3"
+            *ngFor="let group of userGroups | userGroupFilter: userSearchKey; let i = index"
+          >
+            <ng-container [formGroupName]="i">
+              <span class="flex-even t-align-c"> {{ (group.name | titlecase) || 'N/A' }}</span>
+              <span class="flex-even t-align-c f-14 f-blue"> {{ group.members.length }} Members </span>
+              <mat-slide-toggle formControlName="enabled" [disabled]="!group.selectedRole"></mat-slide-toggle>
+              <div class="flex-even d-flex justify-content-end overflow-hidden f-normal">
+                <div class="select-dropdown">
+                  <select
+                    class="f-normal f-14"
+                    (change)="group.selectedRole = $any($event.target).value"
+                    [ngClass]="group.selectedRole ? 'f-blue' : ''"
+                  >
+                    <option default>Select Role</option>
+                    <option [value]="field" *ngFor="let field of fields" [selected]="group.selectedRole == field">
+                      {{ getValue(field) }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <ng-template #noUserTemplate>
+          <div class="d-flex justify-content-center content align-items-center">
+            <span class="text-disabled" jhiTranslate="contractmanager.userManagement.noUsersAvailable"> No Users Available </span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div>
+      <div class="d-flex justify-content-end p-2 text-disabled f-14">
+        User Selected: {{ selectedUserCount }} of {{ (users?.length || 0) + (userGroups?.length || 0) }}
+      </div>
+      <div class="d-flex justify-content-center">
+        <button mat-raised-button class="mr-2" mat-dialog-close jhiTranslate="contractmanager.shared.cancel">Cancel</button>
+        <button
+          mat-raised-button
+          class="ml-2"
+          color="primary"
+          jhiTranslate="contractmanager.userManagement.addUsers"
+          (click)="save()"
+          mat-dialog-close
+        >
+          Add Users
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

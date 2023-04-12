@@ -1,0 +1,15 @@
+<mat-card>
+  <mat-card-content>
+    <h2 mat-dialog-title jhiTranslate="contractmanager.shared.attributeDetails">Attribute Details</h2>
+    <table mat-table [dataSource]="attributeDetailDataSource" class="mat-elevation-z0">
+      <ng-container matColumnDef="key">
+        <td mat-cell class="attr-detail-cell" *matCellDef="let rowElement">{{ rowElement.key }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="value">
+        <td mat-cell class="attr-detail-cell" *matCellDef="let rowElement">{{ rowElement.value }}</td>
+      </ng-container>
+      <tr mat-row *matRowDef="let row; columns: columnsAttributeDetails"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

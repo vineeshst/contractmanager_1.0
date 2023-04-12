@@ -1,0 +1,71 @@
+<h4 mat-dialog-title jhiTranslate="contractmanager.signatoryManagement.sendForSignature">Send for Signature</h4>
+<mat-dialog-content>
+  <div [formGroup]="sendForSignatureForm">
+    <div class="mb-4">
+      <div class="data-validator-card">
+        <div>
+          <table mat-table [dataSource]="recipientsDataSource" formArrayName="recipients">
+            <tr mat-row *matRowDef="let row; let i = index; columns: recipientsDetailsDisplayColumns"></tr>
+            <ng-container matColumnDef="position" *ngIf="signOrderRequired">
+              <td class="order" mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                <mat-form-field class="full-width" appearance="fill">
+                  <mat-label>Recipient Email</mat-label>
+                  <input formControlName="email" matInput />
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <ng-container>
+                <td mat-cell class="delete-icon" *matCellDef="let row; let index = index">
+                  <mat-icon matTooltip="delete" class="cursor-pointer" (click)="deleteAttributeMetaRow(index)" *ngIf="index != 0"
+                    >delete</mat-icon
+                  >
+                </td>
+              </ng-container>
+            </ng-container>
+          </table>
+          <div (click)="addRow()" class="ml-4 f-blue d-flex align-items-center cursor-pointer">
+            <mat-icon>add_circle</mat-icon>
+            <span class="ml-1" jhiTranslate="contractmanager.signatoryManagement.addRecipient">Add Recipient</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4">
+      <mat-form-field class="w-100" appearance="fill">
+        <mat-label jhiTranslate="contractmanager.shared.message">Message</mat-label>
+        <textarea rows="4" class="comment-box" matInput formControlName="agreementSignMessage"></textarea>
+        <mat-error jhiTranslate="contractmanager.shared.descriptionMaxLength">Description must be less than 1000 characters</mat-error>
+      </mat-form-field>
+
+      <mat-slide-toggle color="primary" (change)="toggleSignOrder($event.checked)" formControlName="signOrderRequired">
+        <span class="toggle-btn" jhiTranslate="contractmanager.signatoryManagement.completeInOrder">Complete in order</span>
+      </mat-slide-toggle>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="d-flex justify-content-center">
+  <div *ngIf="!isSignSendInProgress">
+    <button mat-raised-button class="mr-2" mat-dialog-close jhiTranslate="contractmanager.shared.cancel">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="sendForSignature()"
+      jhiTranslate="contractmanager.shared.send"
+      [disabled]="sendForSignatureForm.invalid"
+    >
+      Send
+    </button>
+  </div>
+</mat-dialog-actions>
+
+<div *ngIf="isSignSendInProgress">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>

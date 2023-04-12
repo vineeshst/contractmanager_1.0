@@ -1,0 +1,13 @@
+@import '../../../../../content/scss/bootstrap-variables.scss';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~material-design-icons/iconfont/material-icons.css';
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}

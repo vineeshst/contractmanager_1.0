@@ -1,0 +1,28 @@
+<div class="dashboard-container flex-col-container">
+  <div class="title">
+    <button mat-icon-button [routerLink]="['../../configuration']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span jhiTranslate="contractmanager.configuration.selectContractType">Select Contract Type</span>
+  </div>
+  <div class="flex-row-container">
+    <div class="contract-type-tile" mat-ripple [routerLink]="['agreement']">
+      <div class="tile-content">
+        <img src="/content/images/config-edit.svg" alt="" />
+        <div jhiTranslate="contractmanager.configuration.agreement">Agreement</div>
+      </div>
+    </div>
+    <div class="contract-type-tile" mat-ripple>
+      <div class="tile-content">
+        <img src="/content/images/ct-associations.svg" alt="" />
+        <div jhiTranslate="contractmanager.configuration.associatedDocuments">Associated Documents</div>
+      </div>
+    </div>
+    <div class="contract-type-tile" mat-ripple>
+      <div class="tile-content">
+        <img src="/content/images/ct-request.svg" alt="" />
+        <div jhiTranslate="contractmanager.configuration.contractRequest">Contract Request</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="dashboard-container">
+  <div class="title" jhiTranslate="contractmanager.agreementManagement.agreementManagement">Agreement Management</div>
+  <div class="grid-container tiles-container">
+    <div
+      mat-ripple
+      class="tile flex-container"
+      [routerLink]="['./view-contract-agreements']"
+      *jhiHasPrivilege="{ name: securityEntity.AGREEMENT, privilege: privilege.VIEW }"
+    >
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/list_view.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.agreementManagement.agreements">Agreements</div>
+      </div>
+    </div>
+    <div
+      mat-ripple
+      class="tile flex-container"
+      [routerLink]="['./add-contract-agreement']"
+      *jhiHasPrivilege="{ name: securityEntity.AGREEMENT, privilege: privilege.MANAGE }"
+    >
+      <div class="tile-icon-container flex-container">
+        <div class="tile-icon">
+          <img src="/content/images/config-Add.svg" alt="" />
+        </div>
+      </div>
+      <div class="tile-info">
+        <div class="tile-info-label" jhiTranslate="contractmanager.agreementManagement.createAgreement">Create Agreement</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+.flex-container {
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  width: 100%;
+  // background-color: #034DA2;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  padding: 10px 15px;
+  overflow-x: hidden;
+}
+img {
+  margin-right: 6%;
+  height: 25px;
+  width: 32px;
+}
+.nav-container {
+  padding-top: 45px;
+  position: relative;
+  height: 100%;
+}
+.help-menu {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  background-color: #034da2;
+  padding: 10px 70px;
+}
+
+.active {
+  background-color: #034da2;
+}

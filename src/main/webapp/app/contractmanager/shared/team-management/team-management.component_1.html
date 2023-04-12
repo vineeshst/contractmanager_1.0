@@ -1,0 +1,70 @@
+<div class="teamManagementContainer col-container" [formGroup]="teamForm">
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.PrimaryOwner)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.primaryOwner">Primary Owner</mat-label>
+    <input matInput [value]="currUserEmail" [disabled]="true" />
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.SecondaryOwner)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.secondaryOwner">Secondary Owner</mat-label>
+    <mat-select formControlName="secondaryOwner" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.ContractAdmin)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.contractAdmin">Contract Admin</mat-label>
+    <mat-select formControlName="contractAdmin" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.Contributor)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.contributor">Contributor</mat-label>
+    <mat-select formControlName="contributor" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.Approver)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.approver">Approver</mat-label>
+    <mat-select formControlName="approver" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.DeviationApprover)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.deviationApprover">DeviationApprover</mat-label>
+    <mat-select formControlName="deviationApprover" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.Observer)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.observer">Observer</mat-label>
+    <mat-select formControlName="observer" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.Reviewer)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.reviewer">Reviewer</mat-label>
+    <mat-select formControlName="reviewer" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.ExternalReviewer)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.externalReviewer">External Reviewer</mat-label>
+    <mat-select formControlName="externalReviewer" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.ExternalSignatory)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.externalSignatory">External Signatory</mat-label>
+    <mat-select formControlName="externalSignatory" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width" *ngIf="fields!.includes(roles.InternalSignatory)" appearance="fill">
+    <mat-label jhiTranslate="contractmanager.teamManagement.internalSignatory">InternalSignatory</mat-label>
+    <mat-select formControlName="internalSignatory" #multiSelect [multiple]="true" [compareWith]="userCompare" [disabled]="!isUpdateMode">
+      <mat-option *ngFor="let user of users" [value]="user"> {{ user.email }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div class="flex-row-container dialog-control">
+  <button mat-button color="primary" mat-dialog-close jhiTranslate="contractmanager.shared.cancel">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()" matDialogClose jhiTranslate="contractmanager.shared.save">Save</button>
+</div>

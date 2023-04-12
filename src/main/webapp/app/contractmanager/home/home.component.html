@@ -1,0 +1,21 @@
+<mat-drawer-container [hasBackdrop]="true">
+  <mat-drawer #notification mode="over" position="end">
+    <jhi-notifications (hasNotification)="setNotification($event)" (toggle)="toggleNotification()"></jhi-notifications>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div>
+      <!--  <router-outlet name="header"></router-outlet>-->
+      <jhi-header [hasNotification]="hasNotification" (toggle)="toggleNotification()"></jhi-header>
+    </div>
+
+    <div class="content-full-height flex-container">
+      <div class="main-navigation">
+        <!--    <router-outlet name="sidebar"></router-outlet>-->
+        <jhi-sidebar></jhi-sidebar>
+      </div>
+      <div class="main-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

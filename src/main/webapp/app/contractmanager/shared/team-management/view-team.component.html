@@ -1,0 +1,30 @@
+<div class="grid-container tiles-container">
+  <div mat-button class="tile flex-container" *ngFor="let user of assignedUsers">
+    <div class="tile-icon-container flex-container">
+      <div class="tile-icon">
+        <img src="/content/images/tile-tasks.svg" alt="" *ngIf="user.type != 'group'; else groupImg" />
+        <ng-template #groupImg><img src="/content/images/tile-group.svg" alt="" /> </ng-template>
+      </div>
+    </div>
+    <div class="tile-info">
+      <div class="tile-info-name">
+        {{ user.firstName + ' ' + user.lastName | titlecase }}
+        <span *ngIf="user.type == 'group'">({{ user.members }})</span>
+      </div>
+      <div class="tile-info-position">
+        {{ getValue(user.role) | titlecase }}
+      </div>
+    </div>
+    <div class="align-self-start p-2" *ngIf="user.role !== 'PRIMARY_OWNER'">
+      <img class="option-img" src="/content/images/option-dots.svg" alt="" [matMenuTriggerFor]="delete" />
+    </div>
+    <mat-menu #delete="matMenu">
+      <div>
+        <button mat-menu-item (click)="deleteMem(user, user.role)">
+          <span jhiTranslate="entity.action.delete">Delete</span>
+          <mat-icon class="ml-3 mr-0">delete_outline</mat-icon>
+        </button>
+      </div>
+    </mat-menu>
+  </div>
+</div>

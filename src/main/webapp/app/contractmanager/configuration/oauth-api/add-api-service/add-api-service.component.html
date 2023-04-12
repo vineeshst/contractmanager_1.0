@@ -1,0 +1,65 @@
+<h2 class="mat-dialog-title">Add API Service</h2>
+<form class="example-form" [formGroup]="apiServiceForm">
+  <mat-form-field class="example-full-width">
+    <mat-label jhiTranslate="contractmanager.configuration.serviceName">Service Name</mat-label>
+    <input matInput formControlName="serviceName" />
+    <mat-error *ngIf="serviceName.errors?.required" jhiTranslate="contractmanager.configuration.serviceNameRequired"
+      >Service Name is required</mat-error
+    >
+    <mat-error *ngIf="serviceName.errors?.minlength" jhiTranslate="contractmanager.configuration.serviceNameMinLength"
+      >Service Name must be at least 3 characters</mat-error
+    >
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label jhiTranslate="contractmanager.configuration.authorizationEndPoint">Authorization End Point</mat-label>
+    <input matInput formControlName="authorizationEndPoint" />
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label jhiTranslate="contractmanager.configuration.refreshTokenEndPoint">Refresh Token End Point</mat-label>
+    <input matInput formControlName="refreshTokenEndPoint" />
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label jhiTranslate="contractmanager.configuration.accessTokenEndPoint">Access Token End Point</mat-label>
+    <input matInput formControlName="accessTokenEndPoint" />
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label jhiTranslate="contractmanager.configuration.clientID">Client ID</mat-label>
+    <input matInput formControlName="clientId" />
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label jhiTranslate="contractmanager.configuration.clientSecret">Client Secret</mat-label>
+    <input matInput formControlName="clientSecret" />
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label jhiTranslate="contractmanager.configuration.redirectURI">Redirect URI</mat-label>
+    <input matInput formControlName="redirectUri" />
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label jhiTranslate="contractmanager.configuration.scopeOfToken">Scope of Token</mat-label>
+    <textarea matInput formControlName="tokenScope"></textarea>
+  </mat-form-field>
+  <mat-slide-toggle color="primary" formControlName="implicitAuthorization">
+    <span class="toggle-btn" jhiTranslate="contractmanager.configuration.implicitAuthorization">Implicit Authorization</span>
+  </mat-slide-toggle>
+  <ng-container *ngIf="implicitAuthorization">
+    <mat-form-field class="example-full-width">
+      <mat-label jhiTranslate="contractmanager.configuration.userId">User Id</mat-label>
+      <input matInput formControlName="userId" />
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label jhiTranslate="contractmanager.configuration.password">Password</mat-label>
+      <input matInput formControlName="password" />
+    </mat-form-field>
+  </ng-container>
+</form>
+<br />
+<button
+  mat-raised-button
+  color="primary"
+  [disabled]="!apiServiceForm.valid"
+  (click)="addApiService()"
+  jhiTranslate="contractmanager.configuration.addAPIService"
+>
+  Add API Service
+</button>

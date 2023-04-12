@@ -1,0 +1,22 @@
+{
+  "login": {
+    "title": "Contract Manager",
+    "subtitle": "Bitte loggen Sie sich in Ihren Account ein",
+    "form": {
+      "password": "Passwort",
+      "password.placeholder": "Ihr Passwort",
+      "rememberme": "Automatische Anmeldung",
+      "button": "Anmeldung"
+    },
+    "signUpButton": "Anmelden",
+    "oauthLogin": "Weiter mit Google",
+    "messages": {
+      "error": {
+        "authentication": "<strong>Anmeldung fehlgeschlagen!</strong> Überprüfen Sie bitte Ihre Angaben und versuchen Sie es erneut."
+      }
+    },
+    "password": {
+      "forgot": "Passwort vergessen?"
+    }
+  }
+}

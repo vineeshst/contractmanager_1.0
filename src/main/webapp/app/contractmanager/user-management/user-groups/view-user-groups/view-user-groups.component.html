@@ -1,0 +1,37 @@
+<div class="dashboard-container d-flex flex-column">
+  <div class="title">
+    <button mat-icon-button [routerLink]="['..']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span jhiTranslate="contractmanager.userManagement.userGroups">User Groups</span>
+  </div>
+  <div class="view-types-container flex-grow-1">
+    <mat-table [dataSource]="userGroupsDataSource" matSort>
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.userManagement.userGroupName"> User Group Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdBy">
+        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdBy"> Created By </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.createdBy || '-' | titlecase }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdOn">
+        <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdOn"> Created On </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.createdDate | date: 'MMM d, y, h:mm a' }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef class="flex-grow-0"> </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="flex-grow-0">
+          <img src="/content/images/detail-view-arrow.svg" />
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="userGroupColumns"></mat-header-row>
+      <mat-row class="cursor-pointer" *matRowDef="let row; columns: userGroupColumns" (click)="navigateTo(row)"></mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

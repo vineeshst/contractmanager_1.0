@@ -1,0 +1,30 @@
+.dashboard-container {
+  padding: 40px;
+}
+.title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 2em;
+  letter-spacing: -1px;
+}
+.title > button {
+  display: inline;
+  vertical-align: text-bottom;
+}
+
+.mat-header-row {
+  background: #edf2f6;
+}
+
+.view-types-container {
+  border: 1px solid rgba(0, 0, 0, 0.24);
+  padding: 20px;
+}
+
+.dashboard-container {
+  padding: 20px;
+  height: 100%;
+}
+mat-table {
+  height: 90%;
+}

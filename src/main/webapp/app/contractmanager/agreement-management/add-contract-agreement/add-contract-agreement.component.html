@@ -1,0 +1,658 @@
+<div class="dashboard-container flex-col-container">
+  <div *ngIf="!pageLoading; else pageLoadingSpinner" class="flex-grow-1 d-flex flex-column">
+    <div id="title-container" class="mb-4 d-flex justify-content-between">
+      <div class="title">
+        <button mat-icon-button (click)="navigateBack()">
+          <img src="/content/images/back-arrow.svg" />
+        </button>
+        <span *ngIf="displayMode == 'CREATE'" jhiTranslate="contractmanager.agreementManagement.createAgreement"
+          >Create Contract Agreement
+        </span>
+        <span *ngIf="displayMode == 'VIEW' || displayMode == 'UPDATE'">{{ agreementName.value }}</span>
+      </div>
+      <div *ngIf="displayMode == 'VIEW'" class="align-self-center">
+        <span style="font-size: 16px" jhiTranslate="contractmanager.shared.status">Status: </span>
+        <div class="status-flag f-14" [ngClass]="getAgreementStatusFlag()">
+          {{ getDisplayStatus() | titlecase }}
+        </div>
+      </div>
+    </div>
+    <div class="form-container flex-grow-1">
+      <form class="contrct-type-form" [formGroup]="contractAgreementForm">
+        <jhi-cm-stepper #cdkStepper [linear]="displayMode == 'CREATE'">
+          <cdk-step [stepControl]="contractCategory" [editable]="true">
+            <ng-template cdkStepLabel>
+              <div jhiTranslate="contractmanager.shared.details">Details</div>
+            </ng-template>
+            <div class="step-header">
+              <span jhiTranslate="contractmanager.shared.details">Details</span>
+              <div>
+                <ng-container *ngTemplateOutlet="edit"></ng-container>
+              </div>
+            </div>
+            <div class="flex-col-container edit-container" *ngIf="displayMode == 'CREATE' || displayMode == 'UPDATE'; else viewDetails">
+              <div class="col-2-layout">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.agreementManagement.contractCategory">Contract Category</mat-label>
+                  <mat-select
+                    formControlName="contractCategory"
+                    [compareWith]="compareObjects"
+                    (selectionChange)="onCategorySelect($event.value)"
+                    required
+                    [disabled]="displayMode == 'UPDATE'"
+                  >
+                    <mat-option
+                      *ngFor="let contractCategory of contractCategoriesObserver | async"
+                      [value]="{ id: contractCategory.id, categoryName: contractCategory.categoryName }"
+                    >
+                      {{ contractCategory.categoryName }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error jhiTranslate="contractmanager.agreementManagement.contractCategoryRequired"
+                    >Contract Category is required</mat-error
+                  >
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.agreementManagement.contactTypeName">Contact Type Name</mat-label>
+                  <mat-select
+                    formControlName="contractType"
+                    [compareWith]="compareObjects"
+                    (selectionChange)="onContractTypeSelect($event.value)"
+                    required
+                    [disabled]="displayMode == 'UPDATE'"
+                  >
+                    <mat-option
+                      *ngFor="let contractType of contractTypesByCategoryObserver | async"
+                      [value]="{ id: contractType.id, name: contractType.name }"
+                    >
+                      {{ contractType.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error jhiTranslate="contractmanager.agreementManagement.contactTypeRequired">Contract Type is required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.agreementManagement.agreementName">Agreement Name</mat-label>
+                  <input formControlName="agreementName" matInput required />
+                  <mat-error *ngIf="agreementName.errors?.required" jhiTranslate="contractmanager.agreementManagement.agreementNameRequired"
+                    >Agreement Name is required</mat-error
+                  >
+                  <mat-error
+                    *ngIf="agreementName.errors?.minlength"
+                    jhiTranslate="contractmanager.agreementManagement.agreementNameMinLength"
+                    >Agreement Name must be at least 3 characters</mat-error
+                  >
+                  <mat-error
+                    *ngIf="agreementName.errors?.maxlength"
+                    jhiTranslate="contractmanager.agreementManagement.agreementNameMaxLength"
+                    >Agreement Name must be less than 30 characters</mat-error
+                  >
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width comment-container" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.description">Description</mat-label>
+                  <textarea class="comment-box" matInput formControlName="agreementDescription"></textarea>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.agreementManagement.agreementCode">Agreement Code</mat-label>
+                  <input formControlName="agreementCode" matInput readonly />
+                  <mat-hint jhiTranslate="contractmanager.shared.autoGenerated">Auto Generated</mat-hint>
+                </mat-form-field>
+                <div class="flex-spacer"></div>
+              </div>
+            </div>
+            <div *ngIf="displayMode == 'CREATE'; else buttons">
+              <div class="d-flex justify-content-between mt-4">
+                <div style="min-width: 100px"></div>
+                <div>
+                  <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+                  <button mat-raised-button [disabled]="true" (click)="submitAgreement()" jhiTranslate="contractmanager.shared.create">
+                    Create
+                  </button>
+                </div>
+                <button
+                  mat-button
+                  matStepperNext
+                  [disabled]="agreementName.invalid || selectedContractTypeName.invalid || contractCategory.invalid"
+                  (click)="populateAttributeDetails()"
+                  jhiTranslate="contractmanager.shared.next"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+            <!-- <ng-container *ngTemplateOutlet="buttons" ></ng-container> -->
+          </cdk-step>
+
+          <cdk-step [stepControl]="contractAgreementForm">
+            <ng-template cdkStepLabel>
+              <span jhiTranslate="contractmanager.shared.attributes">Attributes</span>
+            </ng-template>
+            <div class="step-header">
+              <span jhiTranslate="contractmanager.shared.attributes">Attributes</span>
+              <div>
+                <ng-container *ngTemplateOutlet="edit"></ng-container>
+              </div>
+            </div>
+            <div class="flex-col-container edit-container" *ngIf="displayMode == 'CREATE' || displayMode == 'UPDATE'; else viewAttributes">
+              <div [formGroup]="attributeDetailsFormGroup" *ngIf="attributeDetails().controls.length; else noAttributes">
+                <div formArrayName="attributeDetailsFormArray" class="col-2-layout">
+                  <div *ngFor="let attributeCtrl of attributeDetails().controls; let i = index">
+                    <div [formGroupName]="i">
+                      <div *ngIf="!attributeCtrl.get('isHidden')!.value">
+                        <mat-form-field class="attribute-field" appearance="fill">
+                          <mat-label>{{ attributeCtrl.get('displayName')!.value }}</mat-label>
+                          <input formControlName="attributeValue" matInput />
+                          <mat-error *ngIf="attributeCtrl.get('attributeValue')!.errors?.required"
+                            >{{ attributeCtrl.get('displayName')!.value }} is required</mat-error
+                          >
+                          <mat-error *ngIf="attributeCtrl.get('attributeValue')!.errors?.email"
+                            >{{ attributeCtrl.get('displayName')!.value }} is an invalid Email Address</mat-error
+                          >
+                          <mat-error
+                            *ngIf="attributeCtrl.get('attributeValue')!.errors?.number"
+                            jhiTranslate="contractmanager.shared.onlyNumbersAllowed"
+                            >Only numbers are allowed</mat-error
+                          >
+                          <mat-error *ngIf="attributeCtrl.get('attributeValue')!.errors?.url"
+                            >{{ attributeCtrl.get('displayName')!.value }} is an invalid URL</mat-error
+                          >
+                        </mat-form-field>
+                        <mat-icon
+                          matTooltip="{{ attributeCtrl.get('masterData')!.value }}"
+                          *ngIf="attributeCtrl.get('masterData') && !(attributeCtrl.get('masterData')!.value === 'no')"
+                          >search</mat-icon
+                        >
+                        <mat-icon
+                          matTooltip="{{ attributeCtrl.get('helpText')!.value }}"
+                          *ngIf="
+                            attributeCtrl.get('helpText') &&
+                            !(attributeCtrl.get('helpText')!.value === '' || attributeCtrl.get('helpText')!.value === null)
+                          "
+                          >help_outline</mat-icon
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #noAttributes>
+                <div class="text-center">
+                  <span jhiTranslate="contractmanager.message.noAttributes"></span>
+                </div>
+              </ng-template>
+            </div>
+            <div *ngIf="displayMode == 'CREATE'; else buttons">
+              <div class="d-flex justify-content-between mt-4">
+                <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+                <div>
+                  <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+                  <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+                </div>
+                <button mat-button matStepperNext [disabled]="contractAgreementForm.invalid" jhiTranslate="contractmanager.shared.next">
+                  Next
+                </button>
+              </div>
+            </div>
+            <!-- <ng-container *ngTemplateOutlet="buttons" ></ng-container> -->
+          </cdk-step>
+
+          <cdk-step [completed]="selectedTemplate.value.id" [stepControl]="selectedTemplate">
+            <ng-template cdkStepLabel>
+              <span jhiTranslate="contractmanager.shared.templates">Templates</span>
+            </ng-template>
+            <div class="step-header">
+              <span jhiTranslate="contractmanager.agreementManagement.selectTemplate">Select Template</span>
+              <div>
+                <ng-container *ngTemplateOutlet="edit"></ng-container>
+              </div>
+            </div>
+            <div class="flex-col-container edit-container" *ngIf="displayMode == 'CREATE' || displayMode == 'UPDATE'; else viewTemplate">
+              <div class="templates-container" *ngIf="selectedContractType.templates.length > 0; else noTemplate">
+                <div *ngFor="let template of selectedContractType.templates; let formIndex = index">
+                  <div class="flex-row-container justify-space-intital template-container">
+                    <div>
+                      {{ template.templateName }}
+                    </div>
+                    <div class="flex-row-container justify-space-intital">
+                      <div
+                        class="flex-row-container template-action"
+                        (click)="openViewTemplateDialog()"
+                        *ngIf="selectedTemplate.value.templateName == template.templateName"
+                      >
+                        <mat-icon>remove_red_eye</mat-icon>
+                        <span class="preview-text" jhiTranslate="contractmanager.shared.preview">PREVIEW</span>
+                      </div>
+                      <!--                                <div class="flex-row-container select-template">-->
+                      <div
+                        *ngIf="selectedTemplate.value.templateName != template.templateName"
+                        class="flex-row-container select-template cursor-pointer"
+                        (click)="setSelectedTemplate(template)"
+                      >
+                        <mat-icon>add_circle</mat-icon>
+                        <span class="select-template-text" jhiTranslate="contractmanager.shared.select">SELECT</span>
+                      </div>
+                      <div
+                        *ngIf="selectedTemplate.value.templateName == template.templateName"
+                        class="flex-row-container selected-template"
+                      >
+                        <mat-icon class="selected-template-image">check_circle_outline</mat-icon>
+                        <span class="selected-template-text" jhiTranslate="contractmanager.shared.selected">SELECTED</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #noTemplate>
+                <div class="text-center">
+                  <span jhiTranslate="contractmanager.message.noTemplates"></span>
+                </div>
+              </ng-template>
+            </div>
+            <div *ngIf="displayMode == 'CREATE'; else buttons">
+              <div class="d-flex justify-content-between mt-4">
+                <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+                <div>
+                  <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+                  <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+                </div>
+                <button mat-button matStepperNext [disabled]="!selectedTemplate.value.id" jhiTranslate="contractmanager.shared.next">
+                  Next
+                </button>
+              </div>
+            </div>
+            <!-- <ng-container *ngTemplateOutlet="buttons" ></ng-container> -->
+          </cdk-step>
+
+          <cdk-step [formGroup]="teamForm" [stepControl]="teamForm">
+            <ng-template cdkStepLabel>
+              <span jhiTranslate="contractmanager.shared.team">Team</span>
+            </ng-template>
+            <div class="flex-row-container step-header">
+              <span jhiTranslate="contractmanager.shared.team">Team</span>
+              <div class="flex-spacer"></div>
+              <div>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="openTeamManagementDialog()"
+                  *ngIf="displayMode == 'CREATE' || displayMode == 'UPDATE'"
+                  jhiTranslate="contractmanager.shared.addMember"
+                >
+                  Add Member
+                </button>
+                <ng-container *ngTemplateOutlet="edit"></ng-container>
+              </div>
+            </div>
+            <div class="flex-col-container edit-container" *ngIf="displayMode == 'CREATE' || displayMode == 'UPDATE'; else viewTeam">
+              <jhi-view-team [assignedUsers]="assignedUsers" (deleteMember)="deleteMember($event)"></jhi-view-team>
+              <div class="flex-spacer"></div>
+            </div>
+            <ng-template #teamDialog>
+              <jhi-team-management
+                [teamForm]="teamForm"
+                [teamGroupForm]="teamGroupForm"
+                [fields]="teamFields"
+                [notificationConfigForm]="notificationConfigForm"
+                [notificationConfig]="notificationConfig"
+              ></jhi-team-management>
+            </ng-template>
+            <div *ngIf="displayMode == 'CREATE'; else buttons">
+              <div class="d-flex justify-content-between mt-4">
+                <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+                <div>
+                  <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+                  <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+                </div>
+                <button mat-button matStepperNext [disabled]="teamForm.invalid" jhiTranslate="contractmanager.shared.next">Next</button>
+              </div>
+            </div>
+            <!-- <ng-container *ngTemplateOutlet="buttons" ></ng-container> -->
+          </cdk-step>
+
+          <cdk-step *ngIf="displayMode == 'CREATE' || displayMode == 'UPDATE'">
+            <ng-template cdkStepLabel>
+              <span jhiTranslate="contractmanager.shared.verify">Verify</span>
+            </ng-template>
+            <div class="step-header">
+              <span jhiTranslate="contractmanager.shared.verify">Verify</span>
+            </div>
+            <ng-container *ngTemplateOutlet="viewDetails"></ng-container>
+            <ng-container *ngTemplateOutlet="verifyAttributes"></ng-container>
+            <ng-container *ngTemplateOutlet="viewTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="viewTeam"></ng-container>
+
+            <div *ngIf="displayMode == 'CREATE'; else buttons">
+              <div class="d-flex justify-content-between my-4">
+                <button matStepperPrevious mat-button jhiTranslate="contractmanager.shared.previous">Previous</button>
+                <div>
+                  <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    [disabled]="contractAgreementForm.invalid"
+                    (click)="submitAgreement()"
+                    jhiTranslate="contractmanager.shared.create"
+                  >
+                    Create
+                  </button>
+                </div>
+                <div style="min-width: 100px"></div>
+              </div>
+            </div>
+            <!-- <ng-container *ngTemplateOutlet="buttons" ></ng-container> -->
+          </cdk-step>
+
+          <cdk-step *ngIf="displayMode == 'VIEW'">
+            <ng-template cdkStepLabel>
+              <span jhiTranslate="contractmanager.shared.versions">Versions</span>
+            </ng-template>
+            <div class="flex-row-container step-header">
+              <span jhiTranslate="contractmanager.shared.versions">Versions</span>
+              <ng-container *ngTemplateOutlet="edit"></ng-container>
+            </div>
+            <div class="version-scroll">
+              <ng-container *ngIf="contractAgreementVersions; else noRevContainer">
+                <div
+                  class="version-container mb-2 mr-2 d-flex justify-content-between align-items-center"
+                  *ngFor="let version of contractAgreementVersions"
+                >
+                  <div>
+                    <img src="/content/images/ct-version.svg" alt="version-icon" class="m-1" />
+                    <span>Version {{ version.version }}</span>
+                  </div>
+                  <div>
+                    <button mat-button (click)="rollBack(version)">
+                      <img src="/content/images/ct-callback.svg" alt="callback-icon" class="m-1" /><span
+                        jhiTranslate="contractmanager.shared.rollBack"
+                        >Roll Back</span
+                      >
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #noRevContainer>
+                <div class="summary-block">
+                  <p class="text-center" jhiTranslate="contractmanager.agreementManagement.noRevisionsAgreement">
+                    Revisions are not available for this Agreement
+                  </p>
+                </div>
+              </ng-template>
+            </div>
+            <ng-container *ngTemplateOutlet="buttons"></ng-container>
+          </cdk-step>
+
+          <cdk-step *ngIf="displayMode == 'VIEW'">
+            <ng-template cdkStepLabel>
+              <span jhiTranslate="contractmanager.shared.history">History</span>
+            </ng-template>
+
+            <div class="flex-row-container step-header">
+              <span jhiTranslate="contractmanager.shared.history">History</span>
+              <ng-container *ngTemplateOutlet="edit"></ng-container>
+            </div>
+            <div class="flex-col-container edit-container history-container">
+              <mat-table [dataSource]="contractAgreement!.history">
+                <ng-container matColumnDef="events">
+                  <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.events"> Events </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.eventMessage }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="createdBy">
+                  <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdBy"> Created By </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.createdBy | titlecase }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="createdOn">
+                  <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdOn"> Created On </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.createdOn | date: 'medium' }} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="historyColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: historyColumns"></mat-row>
+              </mat-table>
+            </div>
+            <ng-container *ngTemplateOutlet="buttons"></ng-container>
+          </cdk-step>
+        </jhi-cm-stepper>
+
+        <ng-template #viewDetails>
+          <div class="flex-grow-1">
+            <div class="summary-block">
+              <div class="step-header">
+                <span jhiTranslate="contractmanager.shared.details">Details</span>
+              </div>
+              <div class="flex-row-wrap section">
+                <div class="form-pair">
+                  <div class="form-header" jhiTranslate="contractmanager.agreementManagement.contractCategory">Contract Category</div>
+                  <div class="form-value view-form-value">{{ contractAgreementForm.value.contractCategory.categoryName }}</div>
+                </div>
+                <div class="form-pair">
+                  <div class="form-header" jhiTranslate="contractmanager.agreementManagement.contactTypeName">Contract Type Name</div>
+                  <div class="form-value view-form-value">{{ contractAgreementForm.value.contractType.name }}</div>
+                </div>
+                <div class="form-pair">
+                  <div class="form-header" jhiTranslate="contractmanager.agreementManagement.agreementName">Agreement Name</div>
+                  <div class="form-value view-form-value">{{ contractAgreementForm.value.agreementName }}</div>
+                </div>
+                <div class="form-pair">
+                  <div class="form-header" jhiTranslate="contractmanager.shared.templateName">Template Name</div>
+                  <div class="form-value view-form-value">{{ contractAgreementForm.value.template.templateName }}</div>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <div class="form-header" jhiTranslate="contractmanager.shared.description">Description</div>
+                  <div class="form-value wrap-space">{{ contractAgreementForm.value.agreementDescription || '-' }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="summary-block" *ngIf="displayMode == 'VIEW'">
+              <div class="step-header">
+                <span jhiTranslate="contractmanager.agreementManagement.viewAgreement">View Agreement</span>
+              </div>
+              <div class="flex-row-wrap section preview-box">
+                <div class="form-pair">
+                  <div class="form-header">{{ contractAgreementForm.value.agreementName }}</div>
+                </div>
+                <div class="preview-btn" (click)="openViewAgreementDialog()">
+                  <mat-icon>remove_red_eye</mat-icon>
+                  <span class="preview-text" jhiTranslate="contractmanager.shared.view">VIEW</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #verifyAttributes>
+          <div class="summary-block">
+            <div class="step-header">
+              <span jhiTranslate="contractmanager.shared.attributes">Attributes</span>
+            </div>
+            <div class="flex-row-wrap section">
+              <div class="form-pair" *ngFor="let attributeCtl of contractAttributes.controls">
+                <div class="form-header">{{ attributeCtl.get('displayName')!.value }}</div>
+                <div class="form-value view-form-value">{{ attributeCtl.get('attributeValue')!.value }}</div>
+              </div>
+              <div *ngIf="contractAttributes.controls.length == 0" jhiTranslate="contractmanager.agreementManagement.noAttributesSelected">
+                No Attributes were Selected
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #viewAttributes>
+          <div class="flex-grow-1">
+            <div class="summary-block">
+              <div class="step-header">
+                <span jhiTranslate="contractmanager.shared.attributes">Attributes</span>
+              </div>
+              <div class="flex-row-wrap section">
+                <div class="form-pair" *ngFor="let attribute of contractAgreement.attributes">
+                  <div class="form-header">{{ attribute.displayName }}</div>
+                  <div class="form-value view-form-value">{{ attribute.attributeValue }}</div>
+                </div>
+                <div
+                  *ngIf="contractAgreement.attributes.length == 0"
+                  jhiTranslate="contractmanager.agreementManagement.noAttributesSelected"
+                >
+                  No Attributes were Selected
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #viewTemplate>
+          <div class="flex-grow-1">
+            <div class="summary-block">
+              <div class="step-header">
+                <span jhiTranslate="contractmanager.shared.templates">Templates</span>
+              </div>
+              <div class="flex-row-wrap section preview-box">
+                <div class="form-pair">
+                  <div class="form-header" jhiTranslate="contractmanager.agreementManagement.selectedTemplate">Selected Template</div>
+                  <div class="form-value view-form-value">{{ selectedTemplate.value.templateName }}</div>
+                </div>
+                <div class="preview-btn" (click)="openViewTemplateDialog()">
+                  <mat-icon>remove_red_eye</mat-icon>
+                  <span class="preview-text" jhiTranslate="contractmanager.shared.view">VIEW</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #viewTeam>
+          <div class="flex-grow-1">
+            <div class="summary-block">
+              <div class="step-header">
+                <span jhiTranslate="contractmanager.shared.team">Team</span>
+              </div>
+              <div class="flex-row-wrap section">
+                <div class="form-pair" *ngFor="let user of assignedUsers">
+                  <div class="form-value view-form-value">{{ user.firstName + ' ' + user.lastName | titlecase }}</div>
+                  <div class="form-value user-role view-form-value">{{ user.role }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #viewAgreement>
+          <!--            <jhi-team-management [teamForm]="teamForm"  [fields]="teamFields"></jhi-team-management>-->
+          <!--            <pdf-viewer [src]="agreementPdfSrc" [fit-to-page]="true" [autoresize]="true" [original-size]="false" [show-all]="true"></pdf-viewer>-->
+          <!--              <pdf-viewer class="pdf-container" [src]="agreementPdfSrc"></pdf-viewer>-->
+          <pdf-viewer [src]="agreementPdfSrc"></pdf-viewer>
+        </ng-template>
+        <ng-template #viewTemplateDoc>
+          <ngx-doc-viewer [url]="templateDocSrc" viewer="mammoth"></ngx-doc-viewer>
+        </ng-template>
+
+        <ng-template #buttons>
+          <div>
+            <div *ngIf="displayMode == 'VIEW' && entityRole !== 'OBSERVER'" class="d-flex justify-content-center mt-4">
+              <div [ngSwitch]="contractAgreement.agreementStatus">
+                <div *ngSwitchCase="'DRAFT'">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="openRequestApprovalDialog()"
+                    jhiTranslate="contractmanager.shared.sendForApproval"
+                    *ngIf="entityRole == 'PRIMARY_OWNER'"
+                  >
+                    Send for Approval
+                  </button>
+
+                  <button mat-button color="primary" *ngIf="entityRole == 'PRIMARY_OWNER'" (click)="deleteEntity()">Delete</button>
+                </div>
+                <div *ngSwitchCase="'APPROVAL_REJECTED'">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="openRequestApprovalDialog()"
+                    jhiTranslate="contractmanager.shared.sendForApproval"
+                    *ngIf="entityRole == 'PRIMARY_OWNER'"
+                  >
+                    Send for Approval
+                  </button>
+
+                  <button mat-button color="primary" *ngIf="entityRole == 'PRIMARY_OWNER'" (click)="deleteEntity()">Delete</button>
+                </div>
+                <div *ngSwitchCase="'APPROVED'">
+                  <!-- <button mat-raised-button color="primary" *ngIf="entityRole == 'PRIMARY_OWNER'">Return to Requestor</button> -->
+
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="openSignatoryDialog()"
+                    *ngIf="entityRole == 'PRIMARY_OWNER'"
+                    jhiTranslate="contractmanager.shared.sendForSignature"
+                  >
+                    Send for Signature
+                  </button>
+
+                  <button mat-button color="primary" *ngIf="entityRole == 'PRIMARY_OWNER'" (click)="deleteEntity()">Delete</button>
+                </div>
+                <div *ngSwitchCase="'CANCELLED'">
+                  <button mat-raised-button color="primary">Revert Cancellation</button>
+
+                  <button mat-raised-button color="primary" *ngIf="entityRole == 'PRIMARY_OWNER'" (click)="deleteEntity()">Delete</button>
+                </div>
+                <div *ngSwitchCase="'APPROVAL_PENDING'">
+                  <button mat-raised-button color="primary" *ngIf="entityRole == 'APPROVER'" (click)="rejectContractAgreement()">
+                    Reject
+                  </button>
+
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="openApproveDialog()"
+                    *ngIf="entityRole == 'APPROVER'"
+                    jhiTranslate="contractmanager.shared.approve"
+                  >
+                    Approve
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="displayMode == 'UPDATE'" class="d-flex justify-content-center mt-4">
+              <div>
+                <button mat-button color="primary" (click)="cancel('update')">Cancel</button>
+
+                <button
+                  mat-raised-button
+                  color="primary"
+                  [disabled]="contractAgreementForm.invalid"
+                  (click)="saveAgreement()"
+                  jhiTranslate="contractmanager.agreementManagement.saveCreate"
+                >
+                  Save and Create
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #edit>
+          <div *ngIf="displayMode == 'VIEW'">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="changeDisplayMode('UPDATE')"
+              jhiTranslate="contractmanager.shared.edit"
+              *ngIf="entityRole == 'PRIMARY_OWNER'"
+            >
+              Edit
+            </button>
+          </div>
+        </ng-template>
+      </form>
+    </div>
+  </div>
+
+  <ng-template #pageLoadingSpinner>
+    <div class="load-spinner-wrapper">
+      <div class="load-spinner-container">
+        <mat-spinner></mat-spinner>
+      </div>
+    </div>
+  </ng-template>
+</div>

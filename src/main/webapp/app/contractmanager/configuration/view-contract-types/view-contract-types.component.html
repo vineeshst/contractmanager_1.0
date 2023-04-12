@@ -1,0 +1,59 @@
+<div class="dashboard-container flex-col-container">
+  <div *ngIf="!pageLoading; else pageLoadingSpinner">
+    <div class="title">
+      <button mat-icon-button [routerLink]="['../../configuration']">
+        <img src="/content/images/back-arrow.svg" />
+      </button>
+      <span jhiTranslate="contractmanager.configuration.contractTypes">Contract Types</span>
+    </div>
+    <div class="view-types-container">
+      <mat-table [dataSource]="contractTypesDataSource" matSort>
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.configuration.contactTypeName_1">
+            Contract Type Name
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="contractType">
+          <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.configuration.contractType_1"> Contract Type </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.contractType }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="CreatedBy">
+          <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdBy"> Created By </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.createdBy | titlecase }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="CreatedOn">
+          <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.createdOn"> Created On </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.createdOn | date: 'MMM d, y, h:mm a' }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.shared.status_1"> Status </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ getDisplayStatus(element.status) | titlecase }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef class="flex-grow-0"> </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="flex-grow-0 px-3">
+            <img src="/content/images/detail-view-arrow.svg" />
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="contractTypeColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: contractTypeColumns" (click)="navigateTo(row)"></mat-row>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+
+  <ng-template #pageLoadingSpinner>
+    <div class="load-spinner-wrapper">
+      <div class="load-spinner-container">
+        <mat-spinner></mat-spinner>
+      </div>
+    </div>
+  </ng-template>
+</div>

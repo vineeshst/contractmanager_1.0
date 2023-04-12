@@ -1,0 +1,8 @@
+.idea/
+node_modules
+target/
+contractmanager.iml
+src/main/webapp/content/*.pdf
+src/main/webapp/content/*.docx
+
+

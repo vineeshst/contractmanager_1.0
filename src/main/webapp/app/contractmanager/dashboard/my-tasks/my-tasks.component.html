@@ -1,0 +1,59 @@
+<div class="dashboard-container">
+  <div class="d-flex mb-4">
+    <button mat-icon-button [routerLink]="['..']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <h3 class="f-medium" jhiTranslate="contractmanager.dashboard.myTasks">My Tasks</h3>
+  </div>
+  <mat-card class="h-100">
+    <div class="tile flex-container p-3">
+      <div class="tile-info">
+        <div *ngIf="myTasksDataSource && myTasksDataSource.data.length > 0; else noTasks">
+          <mat-table [dataSource]="myTasksDataSource" matSort>
+            <ng-container matColumnDef="taskName">
+              <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.dashboard.task"> Task </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <div [ngSwitch]="element.type">
+                  <span *ngSwitchCase="'CONTRACT_TYPE_APPROVAL'">Contract Type Approval</span>
+                  <span *ngSwitchCase="'CONTRACT_AGREEMENT_APPROVAL'">Agreement Approval</span>
+                  <span *ngSwitchCase="'TEMPLATE_APPROVAL'">Template Approval</span>
+                  <span *ngSwitchCase="'CLAUSE_APPROVAL'">Clause Approval</span>
+                  <span *ngSwitchCase="'CONTRACT_AGREEMENT_SIGNATURE'">Signature Request</span>
+                </div>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="recordName">
+              <mat-header-cell *matHeaderCellDef jhiTranslate="contractmanager.dashboard.recordName"> Record Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.recordName }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="primaryOwner" jhiTranslate="contractmanager.dashboard.primaryOwner">
+              <mat-header-cell *matHeaderCellDef> Primary Owner </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.createdBy | titlecase }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="receivedOn" jhiTranslate="contractmanager.dashboard.receivedOn">
+              <mat-header-cell *matHeaderCellDef> Received On </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.createdDate | date: 'MMM d, y, h:mm a' }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="dueBy" jhiTranslate="contractmanager.dashboard.receivedOn">
+              <mat-header-cell *matHeaderCellDef> Received On </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.createdDate | date: 'MMM d, y, h:mm a' }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="myTasksColumns; sticky: true"></mat-header-row>
+            <mat-row class="cursor-pointer" *matRowDef="let row; columns: myTasksColumns" (click)="route(row.type, row.entityId)"></mat-row>
+          </mat-table>
+        </div>
+        <!-- <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator> -->
+      </div>
+      <ng-template #noTasks>
+        <div class="default-message">
+          <img class="mb-3" src="/content/images/no-entity.svg" alt="" />
+          <div class="text-center f-small text-disabled">
+            <div class="mb-1 f-20">No task available.</div>
+            <div>When you have, you’ll see them here.</div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </mat-card>
+</div>

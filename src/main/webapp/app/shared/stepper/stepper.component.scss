@@ -1,0 +1,79 @@
+.header {
+  width: 16.5%;
+  height: 100%;
+  background: #f5f5f5;
+  ol {
+    list-style: none;
+    padding: 0;
+    margin-top: 32px;
+    li {
+      white-space: nowrap;
+      cursor: pointer;
+      position: relative;
+      font-size: 0.875rem;
+      font-weight: normal;
+      padding: 10px 0px;
+    }
+  }
+}
+
+.stepper-option {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  &.active {
+    background: #e6e6e6;
+    .active-icon {
+      color: #023f88;
+    }
+  }
+}
+
+.stepper-icon {
+  margin-right: 15px;
+  width: auto;
+  height: auto;
+  color: #d6d6d6;
+  z-index: 1;
+}
+
+.completed {
+  color: #03da66;
+  // background-image: url("/content/images/Vector.svg");
+}
+
+.body {
+  width: 80%;
+  padding: 1rem 1rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+  // justify-content: space-between;
+}
+
+.stepper-container {
+  display: flex;
+}
+
+section {
+  height: 100%;
+}
+
+.stepper-line {
+  width: 33px;
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  border-right: 1px solid #cdcdcd;
+}
+
+.stepper-line-t50 {
+  top: 50% !important;
+}
+
+.stepper-line-b50 {
+  bottom: 50% !important;
+}
+
+a {
+  text-decoration: none !important;
+}

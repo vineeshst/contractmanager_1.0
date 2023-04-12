@@ -1,0 +1,616 @@
+<div class="dashboard-container d-flex flex-column">
+  <div class="title mb-4">
+    <button mat-icon-button [routerLink]="['/contractmanager/user-management/user/view-users']">
+      <img src="/content/images/back-arrow.svg" />
+    </button>
+    <span *ngIf="displayMode == 'CREATE'; else editUser" jhiTranslate="contractmanager.userManagement.createUser">Create User</span>
+    <ng-template #editUser>{{ userForm.value.firstName + ' ' + userForm.value.lastName | titlecase }}</ng-template>
+  </div>
+  <div class="form-container" [formGroup]="userForm">
+    <jhi-cm-stepper #cdkStepper [linear]="displayMode == 'CREATE'">
+      <!-- Personal Details Section -->
+      <cdk-step [stepControl]="userForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.details">Details</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.userManagement.personalDetails">Personal Details</span>
+          <div>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between" *ngIf="displayMode != 'VIEW'; else viewDetails">
+          <div class="row mb-2">
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.firstName">First Name</mat-label>
+                <input formControlName="firstName" matInput required />
+                <mat-error *ngIf="firstName?.errors?.required" jhiTranslate="contractmanager.userManagement.firstNameRequired"
+                  >First Name is required</mat-error
+                >
+                <mat-error *ngIf="firstName?.errors?.minlength" jhiTranslate="contractmanager.userManagement.firstNameMinLength"
+                  >First Name must be at least 3 characters</mat-error
+                >
+                <mat-error *ngIf="firstName?.errors?.maxlength" jhiTranslate="contractmanager.userManagement.firstNameMaxLength"
+                  >First Name must be less than 30 characters</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.lastName">Last Name</mat-label>
+                <input formControlName="lastName" matInput required />
+                <mat-error *ngIf="lastName?.errors?.required" jhiTranslate="contractmanager.userManagement.lastNameRequired"
+                  >Last Name is required</mat-error
+                >
+                <mat-error *ngIf="lastName?.errors?.minlength" jhiTranslate="contractmanager.userManagement.lastNameMinLength"
+                  >Last Name must be at least 3 characters</mat-error
+                >
+                <mat-error *ngIf="lastName?.errors?.maxlength" jhiTranslate="contractmanager.userManagement.lastNameMaxLength"
+                  >Last Name must be less than 30 characters</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.emailAddress">Email Address</mat-label>
+                <input type="email" formControlName="email" matInput required />
+                <mat-error *ngIf="email?.errors?.required" jhiTranslate="contractmanager.userManagement.emailRequired"
+                  >Email is required</mat-error
+                >
+                <mat-error *ngIf="email?.errors?.email" jhiTranslate="contractmanager.userManagement.emailAddressInvalid"
+                  >Email Address is invalid</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.phoneNumber">Phone Number</mat-label>
+                <input formControlName="phoneNumber" matInput />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.externalIdentifier">External Identifier</mat-label>
+                <input formControlName="externalIdentifier" matInput />
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.organaisationUnit">Organaisation Unit</mat-label>
+                <input formControlName="organisationUnit" matInput />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.typeOfUser">Type of User</mat-label>
+                <mat-select formControlName="typeOfUser">
+                  <mat-option value="internal"> Internal </mat-option>
+                  <mat-option value="external"> External </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.supervisorUser">Supervisor User</mat-label>
+                <input formControlName="supervisorUser" matInput />
+                <!-- <mat-icon matSuffix>add_circle</mat-icon> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.hierarchyLevel">Hierarchy Level</mat-label>
+                <input type="number" formControlName="hierarchyLevel" matInput />
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.assignUserGroup">Assign User Group</mat-label>
+                <mat-select formControlName="userGroup" [disabled]="displayMode == 'UPDATE'">
+                  <mat-option *ngFor="let ug of userGroups" [value]="ug">
+                    {{ ug.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.assignSecurityGroup">Assign Security Group</mat-label>
+                <mat-select formControlName="securityGroup" [disabled]="displayMode == 'UPDATE'">
+                  <mat-option *ngFor="let sg of securityGroups" [value]="sg">
+                    {{ sg.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label jhiTranslate="contractmanager.userManagement.accessExpiryDate">Access Expiry Date</mat-label>
+                <input type="date" formControlName="expiryDate" matInput />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mat-form-field-wrapper">
+            <div class="col d-flex justify-content-between align-items-center">
+              <span jhiTranslate="contractmanager.userManagement.isAdministrator">Is Administrator </span>
+              <div>
+                <mat-slide-toggle formControlName="administrator"></mat-slide-toggle>
+              </div>
+            </div>
+            <div class="col d-flex justify-content-between align-items-center">
+              <span jhiTranslate="contractmanager.userManagement.isAuthorisedSignatory">Is Authorised Signatory </span>
+              <div>
+                <mat-slide-toggle formControlName="authorisedSignatory"></mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+          <div class="row mat-form-field-wrapper">
+            <div class="col d-flex justify-content-between align-items-center">
+              <span jhiTranslate="contractmanager.userManagement.isSignatoryAgent">Is Signatory Agent </span>
+              <div>
+                <mat-slide-toggle formControlName="signatoryAgent"></mat-slide-toggle>
+              </div>
+            </div>
+            <div class="col"></div>
+          </div>
+          <div class="mat-form-field-wrapper">
+            <span class="font-weight-bold" jhiTranslate="contractmanager.userManagement.workDetails">Work Details</span>
+          </div>
+          <mat-form-field class="w-50" appearance="fill">
+            <mat-label jhiTranslate="contractmanager.userManagement.departmentID">Department ID</mat-label>
+            <input formControlName="departmentId" matInput />
+            <!-- <mat-icon matSuffix>add_circle</mat-icon> -->
+          </mat-form-field>
+        </div>
+        <div class="flex-row-container stepper-control" *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between mt-4">
+            <div style="min-width: 100px"></div>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button mat-raised-button [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+            </div>
+            <button mat-button matStepperNext [disabled]="userForm.invalid" jhiTranslate="contractmanager.shared.next">Next</button>
+          </div>
+        </div>
+      </cdk-step>
+      <!-- -->
+
+      <!-- Preference -->
+      <cdk-step [stepControl]="userForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.preference">Preference</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.userManagement.userSettings">User Settings</span>
+          <div>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between" style="flex: 1" *ngIf="displayMode != 'VIEW'; else viewPreference">
+          <div class="container" formGroupName="preference">
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.recordsPerPage"
+                    >Records Per Page options (User Defined)</mat-label
+                  >
+                  <mat-select formControlName="recordsPerPage">
+                    <mat-option value="5"> 5 </mat-option>
+                    <mat-option value="10"> 10 </mat-option>
+                    <mat-option value="15"> 15 </mat-option>
+                    <mat-option value="20"> 20 </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.defaultChoiceGrid">Default Choice of Grid</mat-label>
+                  <mat-select formControlName="gridChoice">
+                    <mat-option value="grid"> Grid </mat-option>
+                    <mat-option value="list"> List </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.recordsLayout">Records Layout</mat-label>
+                  <mat-select formControlName="recordsLayout">
+                    <mat-option value="grid"> Grid </mat-option>
+                    <mat-option value="list"> List </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.dashboardLayout">Dashboard Layout</mat-label>
+                  <mat-select formControlName="dashboardLayout">
+                    <mat-option value="grid"> Grid </mat-option>
+                    <mat-option value="list"> List </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row mat-form-field-wrapper">
+              <div class="col d-flex justify-content-between align-items-center">
+                <span jhiTranslate="contractmanager.userManagement.searchPanelVisibility">Search Panel Visibility</span>
+                <div>
+                  <mat-slide-toggle formControlName="searchPanelVisible"></mat-slide-toggle>
+                </div>
+              </div>
+              <div class="col d-flex justify-content-between align-items-center">
+                <span jhiTranslate="contractmanager.userManagement.openRecordSameTab">Open every record in same browser tab</span>
+                <div>
+                  <mat-slide-toggle formControlName="openRecordInSameTab"></mat-slide-toggle>
+                </div>
+              </div>
+            </div>
+            <div class="row mat-form-field-wrapper">
+              <div class="col d-flex justify-content-between align-items-center">
+                <!-- <span>Theme Color </span>
+                <div>col</div> -->
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="mat-form-field-wrapper">
+              <span class="font-weight-bold" jhiTranslate="contractmanager.userManagement.localeSettings">Locale Settings</span>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.language">Language</mat-label>
+                  <mat-select formControlName="language">
+                    <mat-option value="en"> English </mat-option>
+                    <mat-option value="de"> Deutsch </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.timeZone">Time Zone</mat-label>
+                  <input formControlName="timeZone" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.dateFormat">Date Format</mat-label>
+                  <mat-select formControlName="dateFormat">
+                    <mat-option value="MMddyyyy"> MM/dd/yyyy </mat-option>
+                    <mat-option value="ddMMyyyy"> dd/MM/yyyy </mat-option>
+                    <mat-option value="yyyyMMdd"> yyyy/MM/dd </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="w-100" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.shared.timeFormat">Time Format</mat-label>
+                  <mat-select formControlName="timeFormat">
+                    <mat-option value="hhmmss"> hh:mm:ss </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="w-50" appearance="fill">
+                  <mat-label jhiTranslate="contractmanager.userManagement.preferredCurrency">Preferred Currency</mat-label>
+                  <mat-select formControlName="preferredCurrency">
+                    <mat-option value="eur"> Euro </mat-option>
+                    <mat-option value="usd"> US Dollar </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between mt-4">
+            <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+            </div>
+            <button mat-button matStepperNext jhiTranslate="contractmanager.shared.next">Next</button>
+          </div>
+        </div>
+      </cdk-step>
+      <!--  -->
+
+      <!-- Team -->
+      <cdk-step [stepControl]="userForm">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.team">Team</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.shared.team">Team</span>
+          <div>
+            <div>
+              <ng-container *ngTemplateOutlet="edit"></ng-container>
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="openTeamManagementDialog('')"
+              *ngIf="displayMode != 'VIEW'"
+              jhiTranslate="contractmanager.shared.addMember"
+            >
+              Add Member
+            </button>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between" style="flex: 1" *ngIf="displayMode != 'VIEW'; else viewTeam">
+          <div class="container-fluid">
+            <jhi-view-team [assignedUsers]="assignedUsers" (deleteMember)="deleteMember($event)"></jhi-view-team>
+            <ng-template #teamDialog>
+              <jhi-team-management
+                [teamForm]="teamForm"
+                [fields]="teamFields"
+                [notificationConfigForm]="notificationConfigForm"
+                [notificationConfig]="notificationConfig"
+              ></jhi-team-management>
+            </ng-template>
+          </div>
+        </div>
+        <div *ngIf="displayMode == 'CREATE'; else buttons">
+          <div class="d-flex justify-content-between mt-4">
+            <button mat-button matStepperPrevious jhiTranslate="contractmanager.shared.previous">Previous</button>
+            <div>
+              <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+              <button mat-raised-button color="primary" [disabled]="true" jhiTranslate="contractmanager.shared.create">Create</button>
+            </div>
+            <button mat-button matStepperNext jhiTranslate="contractmanager.shared.next">Next</button>
+          </div>
+        </div>
+      </cdk-step>
+      <!--  -->
+
+      <!-- Verify -->
+      <cdk-step *ngIf="displayMode == 'CREATE'">
+        <ng-template cdkStepLabel>
+          <div jhiTranslate="contractmanager.shared.verify">Verify</div>
+        </ng-template>
+
+        <div class="step-header">
+          <span jhiTranslate="contractmanager.shared.verify">Verify</span>
+        </div>
+        <ng-container *ngTemplateOutlet="viewDetails"></ng-container>
+        <ng-container *ngTemplateOutlet="viewPreference"></ng-container>
+        <ng-container *ngTemplateOutlet="viewTeam"></ng-container>
+
+        <div class="d-flex flex-column justify-content-between" style="flex: 1">
+          <div class="container"></div>
+          <div *ngIf="displayMode == 'CREATE'; else buttons">
+            <div class="d-flex justify-content-between my-4">
+              <button matStepperPrevious mat-button jhiTranslate="contractmanager.shared.previous">Previous</button>
+              <div>
+                <button mat-button color="primary" (click)="cancel('create')">Cancel</button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  [disabled]="userForm.invalid"
+                  (click)="save()"
+                  jhiTranslate="contractmanager.shared.create"
+                >
+                  Create
+                </button>
+              </div>
+              <div style="min-width: 100px"></div>
+            </div>
+          </div>
+        </div>
+      </cdk-step>
+      <!--  -->
+    </jhi-cm-stepper>
+
+    <!-- View Templates -->
+    <ng-template #viewDetails>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.shared.details">Details</span>
+          </div>
+          <div *ngIf="isEditMode">
+            <div class="flex-row-wrap section">
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.firstName_1">First Name*</div>
+                <div class="form-value">{{ userForm.value.firstName || '-' | titlecase }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.lastName_1">Last Name*</div>
+                <div class="form-value">{{ userForm.value.lastName || '-' | titlecase }}</div>
+              </div>
+              <div class="form-pair" [title]="userForm.value.email">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.email">Email*</div>
+                <div class="form-value">{{ userForm.value.email || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.phoneNumber">Phone Number</div>
+                <div class="form-value">{{ userForm.value.phoneNumber || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.externalIdentifier_1">External Identifier*</div>
+                <div class="form-value">{{ userForm.value.externalIdentifier || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.typeOfUser">Type Of User</div>
+                <div class="form-value">{{ userForm.value.typeOfUser || '-' | titlecase }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.organaisationUnit_1">Organisation Unit*</div>
+                <div class="form-value">{{ userForm.value.organisationUnit || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.isAdministrator">Is Administrator</div>
+                <div class="form-value">{{ userForm.value.administrator ? 'Yes' : 'No' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.isAuthorisedSignatory">Is Authorised Signatory</div>
+                <div class="form-value">{{ userForm.value.authorisedSignatory ? 'Yes' : 'No' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.departmentID">Department Id</div>
+                <div class="form-value">{{ userForm.value.departmentId || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.isSignatoryAgent">Is SignatoryAgent</div>
+                <div class="form-value">{{ userForm.value.signatoryAgent ? 'Yes' : 'No' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.hierarchyLevel">Hierarchy Level</div>
+                <div class="form-value">{{ userForm.value.hierarchyLevel || '-' }}</div>
+              </div>
+              <div class="form-pair" *ngIf="displayMode == 'CREATE'">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.userGroup">User Group</div>
+                <div class="form-value">{{ userForm.value.userGroup?.name || '-' }}</div>
+              </div>
+              <div class="form-pair" *ngIf="displayMode == 'CREATE'">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.securityGroup_1">SecurityGroup</div>
+                <div class="form-value">{{ userForm.value.securityGroup?.name || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.expiryDate">Expiry Date</div>
+                <div class="form-value">{{ userForm.value.expiryDate | date: 'MMM d, y, h:mm a' || '' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.supervisorUser">Supervisor User</div>
+                <div class="form-value">{{ userForm.value.supervisorUser || '-' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #viewPreference>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.shared.preference">Preference</span>
+          </div>
+          <div *ngIf="isEditMode">
+            <div class="flex-row-wrap section">
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.recordsPerPage_1">Records Per Page</div>
+                <div class="form-value">{{ preferenceForm?.get('recordsPerPage')?.value || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.gridChoice">Grid Choice</div>
+                <div class="form-value">{{ preferenceForm?.get('gridChoice')?.value || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.recordsLayout">Records Layout</div>
+                <div class="form-value">{{ preferenceForm?.value.recordsLayout || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.dashboardLayout">Dashboard Layout</div>
+                <div class="form-value">{{ preferenceForm?.value.dashboardLayout || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.searchPanelVisible">Is Search Panel Visible</div>
+                <div class="form-value">{{ preferenceForm?.value.searchPanelVisible ? 'Yes' : 'No' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.userManagement.openRecordSameTab_1">Open Record In Same Tab</div>
+                <div class="form-value">{{ preferenceForm?.value.openRecordInSameTab ? 'Yes' : 'No' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.shared.language">Language</div>
+                <div class="form-value">{{ preferenceForm?.value.language || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.shared.timeZone">Time Zone</div>
+                <div class="form-value">{{ preferenceForm?.value.timeZone || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.shared.dateFormat">Date Format</div>
+                <div class="form-value">{{ preferenceForm?.value.dateFormat || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.shared.timeFormat">Time Format</div>
+                <div class="form-value">{{ preferenceForm?.value.timeFormat || '-' }}</div>
+              </div>
+              <div class="form-pair">
+                <div class="form-header" jhiTranslate="contractmanager.shared.preferredCurrency">Preferred Currency</div>
+                <div class="form-value">{{ preferenceForm?.value.preferredCurrency || '-' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #viewTeam>
+      <div class="flex-grow-1">
+        <div class="summary-block">
+          <div class="step-header">
+            <span jhiTranslate="contractmanager.shared.team">Team</span>
+          </div>
+          <div class="flex-row-wrap section">
+            <div class="form-pair" *ngFor="let user of assignedUsers">
+              <div class="form-value">{{ user.firstName + ' ' + user.lastName | titlecase }}</div>
+              <div class="form-value user-role">{{ user.role }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #update>
+      <div class="stepper-control">
+        <button mat-raised-button color="primary" [disabled]="userForm.invalid" (click)="save()" jhiTranslate="contractmanager.shared.save">
+          Save
+        </button>
+      </div>
+    </ng-template>
+    <ng-template #buttons>
+      <div class="d-flex justify-content-center mt-4">
+        <div *ngIf="displayMode == 'UPDATE'">
+          <div>
+            <button mat-button color="primary" (click)="cancel('update')">Cancel</button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="userForm.invalid"
+              (click)="save()"
+              jhiTranslate="contractmanager.shared.save"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+        <button mat-button *ngIf="displayMode == 'VIEW'" color="primary" (click)="delete()">Delete</button>
+      </div>
+    </ng-template>
+    <ng-template #edit>
+      <div *ngIf="displayMode == 'VIEW'">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="switchToEditMode()"
+          jhiTranslate="contractmanager.shared.edit"
+          *ngIf="entityRole == 'PRIMARY_OWNER'"
+        >
+          Edit
+        </button>
+      </div>
+    </ng-template>
+    <!--  -->
+  </div>
+</div>

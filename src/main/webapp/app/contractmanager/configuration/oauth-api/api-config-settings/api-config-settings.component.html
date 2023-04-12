@@ -1,0 +1,46 @@
+<h2 class="mat-dialog-title" jhiTranslate="contractmanager.configuration.apiConfigSettings">API Config Settings</h2>
+<mat-card-content>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="apiServicesDataSource" matSort class="example-full-width">
+      <ng-container matColumnDef="serviceName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header jhiTranslate="contractmanager.configuration.serviceName_1">Service Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.serviceName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="clientId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header jhiTranslate="contractmanager.configuration.clientId">Client Id</th>
+        <td mat-cell *matCellDef="let element">{{ element.clientId }}</td>
+      </ng-container>
+
+      <!--            <ng-container matColumnDef="clientSecret">-->
+      <!--                <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Secret </th>-->
+      <!--                <td mat-cell *matCellDef="let element"> {{element.clientSecret}} </td>-->
+      <!--            </ng-container>-->
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header jhiTranslate="contractmanager.shared.action">Action</th>
+        <ng-container>
+          <td mat-cell class="attr-detail-cell" *matCellDef="let rowElement; let rowIndex = index">
+            <mat-icon matTooltip="details" (click)="openApiServiceDetailDialog(rowElement, 'viewMode')">remove_red_eye</mat-icon>
+            <mat-icon matTooltip="edit" (click)="openApiServiceDetailDialog(rowElement, 'editMode')">edit</mat-icon>
+            <mat-icon matTooltip="authorize service" (click)="authorizeApiService(rowElement)">done_outline</mat-icon>
+          </td>
+        </ng-container>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="apiServiceColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: apiServiceColumns"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</mat-card-content>
+<br />
+<button mat-raised-button color="primary" (click)="addAPIService()" jhiTranslate="contractmanager.configuration.addAPIService">
+  Add API Service
+</button>
+<!--<div>-->
+<!--    <button mat-raised-button color="primary" href="{{adobeUrl}}" target="_blank">Authorize Service</button>-->
+<!--</div>-->
+<!--<a mat-raised-button href="{{adobeUrl}}">Authorize Service</a>-->
+<!--<button mat-raised-button color="primary" (click)="authorizeApiService('row')"> Authorize API</button>-->

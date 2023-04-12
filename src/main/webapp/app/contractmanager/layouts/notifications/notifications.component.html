@@ -1,0 +1,35 @@
+<section>
+  <div class="d-flex justify-content-between align-items-center section-padding mb-3">
+    <h2 class="f-medium">Notifications</h2>
+    <mat-icon class="cursor-pointer" (click)="close()">close</mat-icon>
+  </div>
+
+  <div id="notif-scroll">
+    <ng-container *ngIf="notificationMap?.size != 0; else noNotifications">
+      <div *ngFor="let day of notificationMap$ | async | keyvalue: compareFunction">
+        <div class="day-title">
+          <span class="section-padding text-disabled f-14">{{ day.key }}</span>
+        </div>
+        <div class="notification-item" *ngFor="let item of day.value" (click)="handleClick(item)">
+          <div class="d-flex align-items-center my-3 section-padding">
+            <img src="/content/images/notif.svg" *ngIf="!item.read" />
+            <ngx-avatar class="avatar mx-2" [name]="item.actionUser" size="39" bgColor="#033f88"></ngx-avatar>
+            <span class="flex-grow-1 px-2"
+              ><b>{{ item.actionUser | titlecase }}</b
+              >{{ item.message }}<span class="f-blue">{{ item.entityName }}</span></span
+            >
+            <span class="text-nowrap">{{ item.date | date: getDateFormat(day.key) }}</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div id="clear-container" class="d-flex justify-content-center py-3" *ngIf="notificationMap?.size != 0">
+    <button mat-button jhiTranslate="contractmanager.shared.clearAll" color="secondary" (click)="clearAll()"></button>
+  </div>
+</section>
+<ng-template #noNotifications>
+  <div class="alt-text">
+    <span jhiTranslate="contractmanager.message.noNotification"></span>
+  </div>
+</ng-template>
