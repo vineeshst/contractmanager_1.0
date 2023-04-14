@@ -13,17 +13,6 @@
 
     <repositories>
         <!-- jhipster-needle-maven-repository -->
-        <repository>
-            <id>adobe-public-releases</id>
-            <name>Adobe Public Releases</name>
-            <url>https://repo.adobe.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
     </repositories>
 
     <pluginRepositories>
