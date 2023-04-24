@@ -16,6 +16,21 @@ pipeline {
         git branch: 'main', url: 'https://github.com/vineeshst/contractmanager_1.0.git'
       }
     }
+    stage('Install Custom jars'){
+      steps {
+        sh 'mvn install:install-file -Dfile=/var/lib/adobe-sign-1.2.0.jar -DgroupId=com.adobe.sign -DartifactId=adobe-sign -Dversion=1.2.0 -Dpackaging=jar'
+      }
+    }
+    // stage('Test'){
+    //   steps {
+    //     sh 'mvn test'
+    //   }
+    // }
+    stage ('Build docker image') {
+      steps {
+          sh 'mvn package -Pprod -DskipTests'
+            }
+        }
   }
 
 }
