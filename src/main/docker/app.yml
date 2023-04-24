@@ -17,7 +17,7 @@ services:
     ports:
 #      - 127.0.0.1:8080:8080
 #      - 80:8080
-#       - 443:8085 #
+#       - 443:8085 ##
       - 80:8085
     volumes:
        - ~/volumes/docker/contractmanager/temp:/src/main/webapp/content/
