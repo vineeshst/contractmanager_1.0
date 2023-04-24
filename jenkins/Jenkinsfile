@@ -25,7 +25,7 @@ pipeline {
     //   steps {
     //     sh 'mvn test'
     //   }
-    // }
+   // // }
     stage ('Build docker image') {
       steps {
           sh 'mvn package -Pprod verify jib:dockerBuild -DskipTests'
