@@ -1,9 +1,19 @@
 pipeline {
   agent any
+  tools {
+	    maven "Maven3"
+	    jdk "OpenJDK11"
+      nodejs 'NodeJs18'
+	}
+  environment {
+        registryCredential = 'ecr:us-east-1:awscreds'
+        appRegistry = "603964211152.dkr.ecr.us-east-1.amazonaws.com/contractmanager"
+        vprofileRegistry = "https://603964211152.dkr.ecr.us-east-1.amazonaws.com"
+    }
   stages {
-    stage('Build'){
+    stage('Fetch code'){
       steps {
-        sh 'echo "Build Completed."'
+        git branch: 'main', url: 'https://github.com/vineeshst/contractmanager_1.0.git'
       }
     }
   }
