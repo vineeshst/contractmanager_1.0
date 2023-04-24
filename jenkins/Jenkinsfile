@@ -1,10 +1,10 @@
 pipeline {
   agent any
-  tools {
-	    maven "Maven3"
-	    jdk "OpenJDK11"
-      nodejs 'NodeJs18'
-	}
+  // tools {
+	//     maven "Maven3"
+	//     jdk "OpenJDK11"
+  //     nodejs 'NodeJs18'
+	// }
   environment {
         registryCredential = 'ecr:us-east-1:awscreds'
         appRegistry = "603964211152.dkr.ecr.us-east-1.amazonaws.com/contractmanager"
