@@ -28,9 +28,19 @@ pipeline {
     // }
     stage ('Build docker image') {
       steps {
-          sh 'mvn package -Pprod -DskipTests'
+          sh 'mvn package -Pprod verify jib:dockerBuild -DskipTests'
             }
         }
+
+    stage('Upload App Image') {
+          steps{
+            script {
+              docker.withRegistry( vprofileRegistry, registryCredential ) {
+                docker.image("contractmanager").push("latest")
+              }
+            }
+          }
+     }
   }
 
 }
